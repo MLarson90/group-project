@@ -40,9 +40,9 @@
         return $this->assign_time;
       }
 
-      function setAssignTime()
+      function setAssignTime($new_assign_time)
       {
-         $this->assign_time = $assign_time;
+         $this->assign_time = $new_assign_time;
       }
 
       function getDueTime()
@@ -50,9 +50,9 @@
         return $this->due_time;
       }
 
-      function setDueTime()
+      function setDueTime($new_due_time)
       {
-         $this->due_time = $due_time;
+         $this->due_time = $new_due_time;
       }
 
       function getId()
@@ -70,6 +70,26 @@
           return false;
       }
     }
+
+      function updateAll($new_name, $new_description, $new_assign_time, $new_due_time)
+      {
+        $executed = $GLOBALS['DB']->prepare("UPDATE tasks SET task_name = :task_name, task_description = :task_description, assign_time = :assign_time, due_time = :due_time WHERE id={$this->getId()}");
+        $executed->bindParam(':task_name', $new_name, PDO::PARAM_STR);
+        $executed->bindParam(':task_description', $new_description, PDO::PARAM_STR);
+        $executed->bindParam(':assign_time', $new_assign_time, PDO::PARAM_STR);
+        $executed->bindParam(':due_time', $new_due_time, PDO::PARAM_STR);
+        $executed->execute();
+        if ($executed){
+          $this->setName($new_name);
+          $this->setDescription($new_description);
+          $this->setAssignTime($new_assign_time);
+          $this->setDueTime($new_due_time);
+          return true;
+        } else {
+          return false;
+        }
+      }
+
     static function getAll()
       {
         $tasks = array();
