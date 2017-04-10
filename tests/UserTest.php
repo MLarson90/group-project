@@ -82,6 +82,25 @@ class UserTest extends PHPUnit_Framework_TestCase
     $result = User::getAll();
     $this->assertEquals($result, [$newUser2]);
   }
+
+  function test_addTask()
+  {
+    $newTask = new User ("sample@gmail.com", "password");
+    $newTask->save();
+    $result = User::getAll();
+    $this->assertEquals($result, [$newTask]);
+  }
+  function test_getTask()
+  {
+    $getTaskTest = new User("clean gutters", "password");
+    $getTaskTest->save();
+    $getTaskTest2 = new User("take out trash", "password");
+    $getTaskTest2->save();
+    $result=$getTaskTest->getTask();
+    $this->assertEquals([$getTaskTest, $getTaskTest2], $result);
+  }
+
+
 }
 
 
