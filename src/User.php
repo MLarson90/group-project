@@ -126,6 +126,7 @@
           return true;
         }
       }
+
       function userProfileSave($first_name, $last_name, $picture, $bio){
         $executed = $GLOBALS['DB']->prepare("INSERT INTO profiles (first_name, last_name, picture, join_date, bio) VALUES (:first_name, :last_name, :picture, NOW(), :bio);");
         $executed->bindParam(':first_name', $first_name, PDO::PARAM_STR);
@@ -140,8 +141,28 @@
         }
       }
 
+      function addTask($task)
+      {
+        $executed = $GLOBALS['DB']->exec("INSERT INTO users_tasks (user_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
+        if($executed){
+          return true;
+        }else{
+          return false;
+        }
+      }
+      function getTask()
+      {
+        $returned_task = $GLOBALS['DB']->query("SELECT tasks.* FROM users JOIN users_tasks ON (users_tasks.user_id = users.id) JOIN tasks ON (tasks.id = users_tasks.task_id) WHERE users.id = {$this->getId()};");
+        $all_task = array();
+        foreach($returned_task as $task) {
+            $each_task = new Task($task['task_name'], $task['task_description'], $task['assign_time'], $task['due_time'],$task['id']);
+            array_push($all_task, $each_task);
+      }
+        return $all_task;
 
     }
+
+  }
 
 
 

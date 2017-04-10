@@ -12,6 +12,8 @@ class GroupTest extends PHPUnit_Framework_TestCase
   protected function tearDown()
   {
     Group::deleteAll();
+    Task::deleteAll();
+    User::deleteAll();
   }
     function test_save()
     {
