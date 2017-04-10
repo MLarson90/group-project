@@ -126,6 +126,21 @@
           return true;
         }
       }
+      function userProfileSave($first_name, $last_name, $picture, $bio){
+        $executed = $GLOBALS['DB']->prepare("INSERT INTO profiles (first_name, last_name, picture, join_date, bio) VALUES (:first_name, :last_name, :picture, NOW(), :bio);");
+        $executed->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+        $executed->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+        $executed->bindParam(':picture', $picture, PDO::PARAM_STR);
+        $executed->bindParam(':bio', $bio, PDO::PARAM_STR);
+        $exeucted->execute();
+        if($executed){
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+
     }
 
 
