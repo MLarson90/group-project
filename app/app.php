@@ -17,9 +17,11 @@
   $app->get("/", function() use ($app) {
     return $app['twig']->render('index.html.twig');
   });
+
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig');
   });
+
   $app->post("/create_account", function() use ($app) {
     if ($_POST['password'] == $_POST['password1'])
     {
@@ -30,12 +32,14 @@
       return $app['twig']->render('create_account.html.twig', array('msg'=>'Your passwords need to be the same'));
     }
   });
+
   $app->post("/homepage", function() use ($app) {
     $new_user = User::find($_POST['user_id']);
     $new_user->userProfileSave($_POST['first_name'], $_POST['last_name'], $_POST['picture'], $_POST['bio']);
-    $new_user->
+    $new_user->save();
     return $app['twig']->render('homepage.html.twig');
   });
+
   $app->post("/login_user", function() use ($app) {
     return $app['twig']->render('homepage.html.twig');
   });

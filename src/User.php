@@ -159,9 +159,19 @@
             array_push($all_task, $each_task);
       }
         return $all_task;
-
     }
-
+    function addGroup($group)
+    {
+      $executed = $GLOBALS['DB']->exec("INSERT INTO users_groups (user_id, group_id) VALUES ({$this->getId()}, {$group->getId()});");
+      if($executed){
+        return true;
+      }else{
+        return false;
+      }
+    }
+    function getGroup(){
+      $executed = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_task ON (users_task.user_id = users.id) JOIN task_force ON ()")
+    }
   }
 
 
