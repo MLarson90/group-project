@@ -7,7 +7,7 @@
   Debug::enable();
 
   $app = new Silex\Application();
-  $DB = new PDO('mysql:host=localhost:8889;dbname=test', 'root', 'root');
+  $DB = new PDO('mysql:host=localhost:8889;dbname=appdata', 'root', 'root');
   $app['debug'] = true;
   $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../views'
