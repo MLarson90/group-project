@@ -126,6 +126,26 @@
           return true;
         }
       }
+      // function getUserGroup()
+      // {
+      //   $returned_user_ids = $GLOBALS['DB']->query("SELECT users.id FROM users_groups JOIN users on (users.id = users_groups.users) WHERE users.id = {$this->id};");
+      //   $users = array();
+      //   foreach($returned_user_ids as $id) {
+      //       $search_id = $id['user_id'];
+      //       array_push($users, User::findUserbyId($search_id));
+      // }
+
+      function getTask()
+      {
+        $returned_task = $GLOBALS['DB']->query("SELECT  FROM users_groups JOIN users on (users.id = users_groups.users) WHERE users.id = {$this->id};");
+        $users = array();
+        foreach($returned_user_ids as $id) {
+            $search_id = $id['user_id'];
+            array_push($users, User::findUserbyId($search_id));
+      }
+
+
+
     }
 
 
