@@ -62,7 +62,71 @@
           return false;
         }
       }
-}
+    static function findUserbyId($id)
+      {
+        $returned_user= $GLOBALS['DB']->prepare("SELECT * FROM users WHERE id=:id;");
+        $returned_user->bindParam(':id', $id, PDO::PARAM_STR);
+        $returned_user->execute();
+        foreach($returned_user as $user){
+        $newUser = new User($user['username'], $user['password'], $user['id']);
+        return $newUser;
+      }
+      }
+      static function findByUserName($search_name)
+      {
+        $returned_user = $GLOBALS['DB']->prepare("SELECT * FROM users WHERE username = :name");
+        $returned_user->bindParam(':name', $search_name, PDO::PARAM_STR);
+        $returned_user->execute();
+        foreach($returned_user as $user){
+          $name = $user['username'];
+          if($name == $search_name){
+            $newUser = new User($user['username'], $user['password'], $user['id']);
+            return $newUser;
+          }
+        }
+      }
+      function updateUserName($new_name)
+      {
+        $executed = $GLOBALS['DB']->exec("UPDATE users SET username = '{$new_name}' WHERE id = {$this->getId()};");
+        if($executed){
+          $this->setUserName($new_name);
+          return true;
+        }else{
+          return false;
+        }
+      }
+      function updateUserPassword($new_pass)
+      {
+        $executed = $GLOBALS['DB']->exec("UPDATE users SET password = '{$new_pass}' WHERE id = {$this->getId()};");
+        if($executed){
+          $this->setPassword($new_pass);
+          return true;
+        }else{
+          return false;
+        }
+      }
+      function delete()
+      {
+        $executed = $GLOBALS['DB']->exec("DELETE FROM users WHERE id = {$this->getId()};");
+        if(!$executed){
+          return false;
+        }
+        $executed = $GLOBALS['DB']->exec("DELETE FROM users_groups WHERE user_id = {$this->getId()};");
+        if(!$executed){
+          return false;
+        }
+        $executed = $GLOBALS["DB"]->exec("DELETE FROM users_profiles WHERE user_id = {$this->getId()};");
+        if(!$executed){
+          return false;
+        }
+        $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE user_id = {$this->getId()};");
+        if (!$executed){
+          return false;
+        }else{
+          return true;
+        }
+      }
+    }
 
 
 
