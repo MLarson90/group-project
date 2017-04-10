@@ -3,6 +3,7 @@
   require_once __DIR__."/../src/Group.php";
   require_once __DIR__."/../src/Task.php";
   require_once __DIR__."/../src/User.php";
+  require_once __DIR__."/../src/Profile.php";
 
   use Symfony\Component\Debug\Debug;
   Debug::enable();
