@@ -90,7 +90,7 @@
         }
       }
 
-    static function getAll()
+      static function getAll()
       {
         $tasks = array();
         $returned_tasks = $GLOBALS['DB']->query('SELECT * FROM tasks;');
@@ -99,9 +99,33 @@
           $newTask = new Task($task['task_name'], $task['task_description'],  $task['assign_time'], $task['due_time'], $task['id']);
           array_push($tasks, $newTask);
         }
-
         return $tasks;
       }
+
+      function addUser($user)
+      {
+        $executed = $GLOBALS['DB']->exec("INSERT INTO users_tasks (user_id, task_id) VALUES ({$user->getId()}, {$this->getId()});");
+        if ($executed) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      function getUsers()
+      {
+        $returned_users = $GLOBALS['DB']->query("SELECT users.* FROM tasks JOIN users_tasks ON (tasks.id = users_tasks.task_id) JOIN users ON (users_tasks.user_id) WHERE tasks.id = {$this->getId()};");
+
+        $users = array();
+        foreach ($returned_users as $user) {
+          $user_name = $user['user_name'];
+          $password = ['password'];
+          $new_user = new User($user_name, $password);
+          array_push($users, $new_user);
+        }
+        return $users;
+      }
+
       static function deleteAll()
       {
         $deleteAll = $GLOBALS['DB']->exec("DELETE FROM tasks;");
@@ -111,6 +135,15 @@
         }else {
           return false;
         }
+      }
+
+      function delete()
+      {
+        $executed = $GLOBALS['DB']->exec("DELETE FROM tasks WHERE id = {$this->getId()};");
+        if (!$executed) {
+          return false;
+        }
+        $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE task_id = {$this->getId()};");
       }
     }
 
