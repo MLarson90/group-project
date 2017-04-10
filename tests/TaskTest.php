@@ -101,10 +101,4 @@ class TaskTest extends PHPUnit_Framework_TestCase
       $this->assertEquals($test_task->getUsers(), [$test_user, $test_user2]);
     }
   }
-
-
-
-
-
-
 ?>

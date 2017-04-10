@@ -94,14 +94,5 @@ class UserTest extends PHPUnit_Framework_TestCase
     $result = $newUser->getTask();
     $this->assertEquals($result, [$newTask]);
   }
-
-
-
 }
-
-
-
-
-
-
 ?>

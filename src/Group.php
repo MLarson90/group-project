@@ -102,13 +102,25 @@
           $executed = $GLOBALS['DB']->exec("DELETE FROM task_forces WHERE id = {$this->getId()};");
           if (!$executed)
           {
-            return false;
+          $executed = $GLOBALS['DB']->exec("DELETE FROM users_groups WHERE users_groups.group_id = {$this->getId()};");
+          if (!$executed){
+              return false;
           } else {
+              return true;
+          }
+          }
+      }
+      function addUserToGroup($user_id)
+      {
+          $executed = $GLOBALS['DB']->exec("INSERT INTO users_groups (user_id, group_id) VALUES ({$user_id}, {$this->getId()});");
+          if($executed){
             return true;
+          } else {
+            return false;
           }
       }
 
-  }
+    }
 
 
 

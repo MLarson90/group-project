@@ -143,10 +143,43 @@
         foreach($returned_task as $task) {
             $each_task = new Task($task['task_name'], $task['task_description'], $task['assign_time'], $task['due_time'],$task['id']);
             array_push($all_task, $each_task);
+
           }
         return $all_task;
       }
-      
+
+
+        }
+        return $all_task;
+
+    }
+    function addGroup($group)
+    {
+      $executed = $GLOBALS['DB']->exec("INSERT INTO users_groups (user_id, group_id) VALUES ({$this->getId()}, {$group->getId()});");
+      if($executed){
+        return true;
+      }else{
+        return false;
+      }
+    }
+    function getGroup(){
+      $executed = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_task ON (users_task.user_id = users.id) JOIN task_force ON ()")
+    }
+
+
+
+      }
+      function joinUserProfile($profile_id)
+      {
+          $executed = $GLOBALS['DB']->exec("INSERT INTO users_profiles (user_id, profile_id) VALUES ({$this->getId()}, $profile_id);");
+          if ($executed)
+          {
+            return true;
+          } else {
+            return false;
+          }
+      }
+
 
   }
 

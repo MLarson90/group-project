@@ -1,0 +1,16 @@
+{% include 'top.html.twig' %}
+<form action="/login_user" method="post">
+<div class="form-group">
+<label for="username">Enter your username</label>
+<input type="text" name="username">
+<br>
+<label for="userpassword">Enter your user password</label>
+<input type="password" name="userpassword">
+</div>
+<button type="submit" name="button">LogIn</button>
+</form>
+<br>
+<form action="/create_user" method="post">
+  <button type="submit" name="button">New User</button>
+</form>
+{% include 'bottom.html.twig' %}
