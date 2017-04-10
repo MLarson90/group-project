@@ -31,7 +31,7 @@
     }
   });
   $app->post("/homepage", function() use ($app) {
-    $new_user = User::find($_POST['user_id']);
+    $new_user = User::findUserbyId($_POST['user_id']);
     $new_user->userProfileSave($_POST['first_name'], $_POST['last_name'], $_POST['picture'], $_POST['bio']);
     $new_user->
     return $app['twig']->render('homepage.html.twig');
