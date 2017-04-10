@@ -84,7 +84,6 @@ class UserTest extends PHPUnit_Framework_TestCase
     $result = User::getAll();
     $this->assertEquals($result, [$newUser2]);
   }
-
   function test_addTask()
   {
     $newUser = new User ("sample@gmail.com", "password");
@@ -93,7 +92,6 @@ class UserTest extends PHPUnit_Framework_TestCase
     $newTask->save();
     $newUser->addTask($newTask);
     $result = $newUser->getTask();
-
     $this->assertEquals($result, [$newTask]);
   }
 
