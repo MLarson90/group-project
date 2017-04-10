@@ -114,13 +114,14 @@
 
       function getUsers()
       {
-        $returned_users = $GLOBALS['DB']->query("SELECT users.* FROM tasks JOIN users_tasks ON (tasks.id = users_tasks.task_id) JOIN users ON (users_tasks.user_id) WHERE tasks.id = {$this->getId()};");
+        $returned_users = $GLOBALS['DB']->query("SELECT users.* FROM tasks JOIN users_tasks ON (tasks.id = users_tasks.task_id) JOIN users ON (users_tasks.user_id = users.id) WHERE tasks.id = {$this->getId()};");
 
         $users = array();
         foreach ($returned_users as $user) {
-          $user_name = $user['user_name'];
-          $password = ['password'];
-          $new_user = new User($user_name, $password);
+          $id = $user['id'];
+          $user_name = $user['username'];
+          $password = $user['password'];
+          $new_user = new User($user_name, $password, $id);
           array_push($users, $new_user);
         }
         return $users;

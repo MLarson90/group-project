@@ -13,6 +13,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
   {
     Task::deleteAll();
     User::deleteAll();
+    Group::deleteAll();
   }
 
     function test_save()
@@ -57,14 +58,17 @@ class TaskTest extends PHPUnit_Framework_TestCase
       $test_task = new Task("shopping", "get groceries", "2017-04-10", "2017-06-10");
       $test_task->save();
 
+      $test_task2 = new Task("hiking", "get high", "2017-04-10", "2017-06-10");
+      $test_task2->save();
+
       $test_user = new User("Mike", "password");
       $test_user->save();
 
       $test_task->addUser($test_user);
-      $test_task->save();
 
-      $this->assertEquals([], $test_user->getTask());
+      $test_task->delete();
 
+      $this->assertEquals([$test_task2], Task::getAll());
     }
 
     function test_addUser()

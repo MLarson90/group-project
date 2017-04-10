@@ -126,19 +126,11 @@
           return true;
         }
       }
-      // function getUserGroup()
-      // {
-      //   $returned_user_ids = $GLOBALS['DB']->query("SELECT users.id FROM users_groups JOIN users on (users.id = users_groups.users) WHERE users.id = {$this->id};");
-      //   $users = array();
-      //   foreach($returned_user_ids as $id) {
-      //       $search_id = $id['user_id'];
-      //       array_push($users, User::findUserbyId($search_id));
-      // }
-      function addTask($task_id)
+
+      function addTask($task)
       {
-        $executed = $GLOBALS['DB']->exec("INSERT INTO users_tasks (user_id, task_id) VALUES ({$this->getId()}, $task_id);");
+        $executed = $GLOBALS['DB']->exec("INSERT INTO users_tasks (user_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
         if($executed){
-          $this->id = $GLOBALS['DB']->lastInsertId();
           return true;
         }else{
           return false;
@@ -146,12 +138,13 @@
       }
       function getTask()
       {
-        $returned_task = $GLOBALS['DB']->query("SELECT  FROM users_groups JOIN users on (users.id = users_groups.users) WHERE users.id = {$this->id};");
-        $users = array();
-        foreach($users as $id) {
-            $search_id = $id['user_id'];
-            array_push($users, User::findUserbyId($search_id));
+        $returned_task = $GLOBALS['DB']->query("SELECT tasks.* FROM users JOIN users_tasks ON (users_tasks.user_id = users.id) JOIN tasks ON (tasks.id = users_tasks.task_id) WHERE users.id = {$this->getId()};");
+        $all_task = array();
+        foreach($returned_task as $task) {
+            $each_task = new Task($task['task_name'], $task['task_description'], $task['assign_time'], $task['due_time'],$task['id']);
+            array_push($all_task, $each_task);
       }
+        return $all_task;
     }
 
   }

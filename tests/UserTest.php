@@ -11,6 +11,8 @@ class UserTest extends PHPUnit_Framework_TestCase
   protected function tearDown()
   {
     User::deleteAll();
+    Task::deleteAll();
+    Group::deleteAll();
   }
   function test_Save()
   {
@@ -85,20 +87,16 @@ class UserTest extends PHPUnit_Framework_TestCase
 
   function test_addTask()
   {
-    $newTask = new User ("sample@gmail.com", "password");
+    $newUser = new User ("sample@gmail.com", "password");
+    $newUser->save();
+    $newTask = new Task("Clean", "All shelves in the kitchen", "5/11/17", "5/12/17");
     $newTask->save();
-    $result = User::getAll();
+    $newUser->addTask($newTask);
+    $result = $newUser->getTask();
+
     $this->assertEquals($result, [$newTask]);
   }
-  function test_getTask()
-  {
-    $getTaskTest = new User("clean gutters", "password");
-    $getTaskTest->save();
-    $getTaskTest2 = new User("take out trash", "password");
-    $getTaskTest2->save();
-    $result=$getTaskTest->getTask();
-    $this->assertEquals([$getTaskTest, $getTaskTest2], $result);
-  }
+
 
 
 }
