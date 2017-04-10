@@ -40,9 +40,9 @@
         return $this->assign_time;
       }
 
-      function setAssignTime()
+      function setAssignTime($new_assign_time)
       {
-         $this->assign_time = $assign_time;
+         $this->assign_time = $new_assign_time;
       }
 
       function getDueTime()
@@ -50,9 +50,9 @@
         return $this->due_time;
       }
 
-      function setDueTime()
+      function setDueTime($new_due_time)
       {
-         $this->due_time = $due_time;
+         $this->due_time = $new_due_time;
       }
 
       function getId()
@@ -70,7 +70,27 @@
           return false;
       }
     }
-    static function getAll()
+
+      function updateAll($new_name, $new_description, $new_assign_time, $new_due_time)
+      {
+        $executed = $GLOBALS['DB']->prepare("UPDATE tasks SET task_name = :task_name, task_description = :task_description, assign_time = :assign_time, due_time = :due_time WHERE id={$this->getId()}");
+        $executed->bindParam(':task_name', $new_name, PDO::PARAM_STR);
+        $executed->bindParam(':task_description', $new_description, PDO::PARAM_STR);
+        $executed->bindParam(':assign_time', $new_assign_time, PDO::PARAM_STR);
+        $executed->bindParam(':due_time', $new_due_time, PDO::PARAM_STR);
+        $executed->execute();
+        if ($executed){
+          $this->setName($new_name);
+          $this->setDescription($new_description);
+          $this->setAssignTime($new_assign_time);
+          $this->setDueTime($new_due_time);
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      static function getAll()
       {
         $tasks = array();
         $returned_tasks = $GLOBALS['DB']->query('SELECT * FROM tasks;');
@@ -79,9 +99,33 @@
           $newTask = new Task($task['task_name'], $task['task_description'],  $task['assign_time'], $task['due_time'], $task['id']);
           array_push($tasks, $newTask);
         }
-
         return $tasks;
       }
+
+      function addUser($user)
+      {
+        $executed = $GLOBALS['DB']->exec("INSERT INTO users_tasks (user_id, task_id) VALUES ({$user->getId()}, {$this->getId()});");
+        if ($executed) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      function getUsers()
+      {
+        $returned_users = $GLOBALS['DB']->query("SELECT users.* FROM tasks JOIN users_tasks ON (tasks.id = users_tasks.task_id) JOIN users ON (users_tasks.user_id) WHERE tasks.id = {$this->getId()};");
+
+        $users = array();
+        foreach ($returned_users as $user) {
+          $user_name = $user['user_name'];
+          $password = ['password'];
+          $new_user = new User($user_name, $password);
+          array_push($users, $new_user);
+        }
+        return $users;
+      }
+
       static function deleteAll()
       {
         $deleteAll = $GLOBALS['DB']->exec("DELETE FROM tasks;");
@@ -91,6 +135,15 @@
         }else {
           return false;
         }
+      }
+
+      function delete()
+      {
+        $executed = $GLOBALS['DB']->exec("DELETE FROM tasks WHERE id = {$this->getId()};");
+        if (!$executed) {
+          return false;
+        }
+        $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE task_id = {$this->getId()};");
       }
     }
 
