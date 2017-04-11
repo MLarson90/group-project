@@ -7,7 +7,7 @@
 ## Description
 
 _Social media web app that incorporates to do lists, that can be assigned to users of groups by the admin of said group. See the composer.json file for project dependencies._
-
+https://github.com/MLarson90/group-project
 ## Setup/Installation Requirements
 
 * _Download or clone project files_
@@ -22,7 +22,7 @@ _Social media web app that incorporates to do lists, that can be assigned to use
 * _spec 5 A user can join groups_
 * _spec 6 A user can invite their friends to groups_
 * _spec 7 A admin of a group can assign a to do task to a member of the same group_
-* _spec 8 A user can enter their profile picture URL_
+* _spec 8 An user will get updates on their home page about tasks they have been assigned_
 
 ## Known Bugs
 
