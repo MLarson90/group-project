@@ -43,9 +43,9 @@
       $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
       $new_profile->saveUsertoJoinTable($_POST['user_id']);
       $user = User::findUserbyId($_POST['user_id']);
-      $task = $user->getTask();
-      $task_count = count($task);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task,'user_id'=>$_POST['user_id']));
+      $groups = $user->getGroup();
+      var_dump($groups);
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'groups'=>$groups,'user_id'=>$_POST['user_id']));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
     }
@@ -61,9 +61,8 @@
     } else {
       $profile = Profile::getProfileUsingId($user_id);
       $user = User::findUserbyId($user_id);
-      $task = $user->getTask();
-      $task_count = count($task);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task,'user_id'=>$user_id));
+      $groups = $user->getGroup();
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups));
     }
   });
 

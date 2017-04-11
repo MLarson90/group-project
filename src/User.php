@@ -157,7 +157,7 @@
       }
     }
     function getGroup(){
-      $returned_groups = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_groups ON (users_groups.user_id = users.id) JOIN task_force ON (task_force.id = users_groups.group_id) WHERE users.id = {$this->getId()};");
+      $returned_groups = $GLOBALS['DB']->query("SELECT task_forces.* FROM users JOIN users_groups ON (users_groups.user_id = users.id) JOIN task_forces ON (task_forces.id = users_groups.group_id) WHERE users.id = {$this->getId()};");
       $all_groups = array();
         foreach($returned_groups as $group){
           $each_group = new Group($group['group_name'], $group['public'], $group['id']);
