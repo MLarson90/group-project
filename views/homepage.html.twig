@@ -1,5 +1,20 @@
 {% include 'top.html.twig' %}
 
+</div>
+<nav>
+  <div class="nav-wrapper">
+    <div class="container">
+      <a href="/" class="brand-logo center">everydone</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="#">My Groups</a></li>
+        <li><a href="#">My Tasks</a></li>
+        <li><a href="/profile/{{id}}">My Profile</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
 <img src="{{ profile.getPicture }}" height="100" width="100">
 
 <p>{{ profile.getFirstName }}</p>
