@@ -17,7 +17,7 @@
   ));
 
   $app->get("/", function() use ($app) {
-    return $app['twig']->render('index.html.twig', 'msg'=>'');
+    return $app['twig']->render('index.html.twig', array('msg'=>''));
   });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
@@ -28,7 +28,7 @@
     {
       $new_user = new User($_POST['user_email'], $_POST['password']);
       $new_user->save();
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId()));
+      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
       return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
@@ -41,7 +41,8 @@
     if(isset($_POST['button'])){
       $new_profile = new Profile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
       $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::findProfile($new_profile->getId())));
+      $new_profile->saveUsertoJoinTable($_POST['user_id']);
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id'])));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
     }
@@ -49,14 +50,14 @@
   $app->post("/login_user", function() use ($app) {
     $username = $_POST['username'];
     $password = $_POST['userpassword'];
-    $user = User::login($username, $password);
-    if ($user != null)
+    $user_id = User::login($username, $password);
+
+    if ($user_id == null)
     {
-      $user_id = $user->getId();
+      return $app['twig']->render('index.html.twig', array('msg'=>"Sorry, we could not find your account."));
+    } else {
       $profile = Profile::getProfileUsingId($user_id);
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile));
-    } else {
-      return $app['twig']->render('index.html.twig', 'msg'=>"Sorry, we could not find your account.");
     }
   });
   return $app;
