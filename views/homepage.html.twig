@@ -22,4 +22,11 @@
 {{ profile.getBio }}
 {{ profile.getDate }}
 
+{% include 'creategroup.html.twig' %}
+
+<form action="/group" method="post">
+  <button type="button">Group</button>
+</form>
+
+
 {% include 'bottom.html.twig' %}
