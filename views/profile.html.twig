@@ -1,24 +1,26 @@
 {% include 'top.html.twig' %}
-<form action="/homepage" method="post">
-<div class="form-group">
-<label for="first_name">Enter your first name</label>
-<input type="text" name="first_name">
-</div>
-<div class="form-group">
-<label for="last_name">Enter your last name</label>
-<input type="text" name="last_name">
-</div>
-<div class="form-group">
-<label for="profile_pic">Enter the <strong>URL</strong> for your profile picture</label>
-<input type="text" name="profile_pic">
-</div>
-<div class="form-group">
-<label for="bio">Enter a bio</label>
-<textarea class="form-control" type="text" name="bio" rows="5"></textarea>
-</div>
-<input type="hidden" name="user_id" value="{{ user_id }}">
-<button type="submit" name="button">Submit your profile</button>
+
+<form action="/homepage" method="post" enctype="multipart/form-data">
+  <div class="input-field col m4">
+    <label for="first_name">Enter your first name</label>
+    <input type="text" name="first_name">
+  </div>
+  <div class="input-field col m4">
+    <label for="last_name">Enter your last name</label>
+    <input type="text" name="last_name">
+  </div>
+  <div class="input-field col m4">
+    <label for="profile_pic">Enter the <strong>URL</strong> for your profile picture</label>
+    <input type="text" name="profile_pic">
+  </div>
+  <div class="input-field col m4">
+    <label for="bio">Enter a bio</label>
+    <textarea class="form-control" type="text" name="bio" rows="5"></textarea>
+  </div>
+  <input type="hidden" name="user_id" value="{{ user_id }}">
+  <button type="submit" class="btn cyan waves-effect waves-light" name="button">Submit your profile</button>
 </form>
+
 {% if msg is not empty %}
   {{ msg }}
 {% endif %}

@@ -191,7 +191,8 @@
         return $userpasswordArray;
       }
 
-      static function login($username, $password){
+      static function login($username, $password)
+      {
         $check = $GLOBALS['DB']->prepare("SELECT * FROM users WHERE username = :username AND password = :password;");
         $check->bindParam(':username', $username, PDO::PARAM_STR);
         $check->bindParam(':password', $password, PDO::PARAM_STR);

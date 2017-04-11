@@ -1,0 +1,66 @@
+nav {
+  background: #fff;
+}
+
+nav li a{
+  color: #bdbdbd;
+}
+
+body {
+  color: #bdbdbd;
+}
+
+.nav-wrapper a {
+  color: #bdbdbd;
+}
+
+.nav-wrapper .brand-logo {
+  color: #e0e0e0;
+}
+
+.login-area {
+  padding: 60px;
+}
+
+.login-area p {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 200;
+}
+
+/* input field styling */
+
+/* label color */
+ .input-field label {
+   color: #bdbdbd;
+ }
+ /* label focus color */
+ .input-field input[type=text]:focus + label {
+   color: #00bcd4;
+ }
+
+ .input-field input[type=password]:focus + label {
+   color: #00bcd4;
+ }
+
+ .input-field input[type=email]:focus + label {
+   color: #00bcd4;
+ }
+
+input {
+   border-bottom: 1px solid #bdbdbd;
+ }
+ /* label underline focus color */
+ .input-field input[type=text]:focus {
+   border-bottom: 1px solid #03a9f4;
+ }
+ .input-field input[type=password]:focus {
+   border-bottom: 1px solid #03a9f4;
+ }
+ .input-field input[type=email]:focus {
+   border-bottom: 1px solid #03a9f4;
+ }
+ /* icon prefix focus color */
+ .input-field .prefix.active {
+   color: #bdbdbd;
+ }
