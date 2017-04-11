@@ -98,7 +98,7 @@
   $app->post("/search", function() use($app){
       $search = '%'.$_POST['searchName'].'%';
       $results = Profile::search($search);
-      if($results != null){
+      if($_POST['searchName'] != null){
         return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>''));
       } else {
         return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'msg'=>'No Match!'));
