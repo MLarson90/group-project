@@ -191,8 +191,8 @@
         return $userpasswordArray;
       }
 
-      function login(){
-        $check = $GLOBALS['DB']->query("SELECT * FROM users WHERE username = '{$this->getUserName()}' AND password = '{$this->getPassword()}';");
+      static function login($username, $password){
+        $check = $GLOBALS['DB']->prepare("SELECT * FROM users WHERE username = $username AND password = $password;");
         $result = $check->fetch(PDO::FETCH_ASSOC);
         $user = new User($result['username'], $result['password'], $result['id']);
         return $user;

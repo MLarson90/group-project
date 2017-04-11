@@ -135,6 +135,17 @@
         $profile = new Profile($result['first_name'], $result['last_name'], $result['picture'], $result['join_date'], $result['bio'], $result['id'], $result['date']);
         return $profile;
       }
+      function saveUsertoJoinTable($id)
+      {
+        $executed = $GLOBALS['DB']->prepare("INSERT INTO users_profiles (user_id, profile_id) VALUES (:id, {$this->getId()});");
+        $executed->bindParam(':id', $id, PDO::PARAM_INT);
+        $executed->execute();
+        if ($executed) {
+          return true;
+        } else {
+          return false;
+        }
+      }
 
     }
 

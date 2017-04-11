@@ -16,7 +16,7 @@
   ));
 
   $app->get("/", function() use ($app) {
-    return $app['twig']->render('index.html.twig');
+    return $app['twig']->render('index.html.twig', 'msg'=>'');
   });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
@@ -35,7 +35,6 @@
     }
   });
   $app->post("/homepage", function() use ($app) {
-    //$new_user = User::findUserbyId($_POST['user_id']);
     $new_profile = new Profile ($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
     var_dump($new_profile->getPicture());
     $new_profile->save();
@@ -44,15 +43,14 @@
   $app->post("/login_user", function() use ($app) {
     $username = $_POST['username'];
     $password = $_POST['userpassword'];
-    $new_user = new User($username, $password);
-    $user = $new_user->login();
+    $user = User::login($username, $password);
     if ($user != null)
     {
       $user_id = $user->getId();
       $profile = Profile::getProfileUsingId($user_id);
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile));
     } else {
-      return $app['twig']->render('index.html.twig');
+      return $app['twig']->render('index.html.twig', 'msg'=>"Sorry, we could not find your account.");
     }
   });
   return $app;
