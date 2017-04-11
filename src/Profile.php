@@ -8,7 +8,7 @@
       private $id;
       private $date;
 
-      function __construct($first_name, $last_name, $picture=null, $bio, $id=null, $date=null)
+      function __construct($first_name, $last_name, $picture, $bio, $id=null, $date=null)
       {
           $this->first_name = $first_name;
           $this->last_name = $last_name;
@@ -135,9 +135,11 @@
       }
       static function getProfileUsingId($user_id)
       {
-        $executed = $GLOBALS['DB']->prepare("SELECT profiles.* FROM profiles JOIN users_profiles ON (users_profiles.profile_id = profiles.id) JOIN users ON (users_profiles.user_id = users.id) WHERE users.id = $user_id;");
+        $executed = $GLOBALS['DB']->prepare("SELECT profiles.* FROM profiles JOIN users_profiles ON (users_profiles.profile_id = profiles.id) JOIN users ON (users_profiles.user_id = users.id) WHERE users.id = :id;");
+        $executed->bindParam(':id', $user_id, PDO::PARAM_INT);
+        $executed->execute();
         $result = $executed->fetch(PDO::FETCH_ASSOC);
-        $profile = new Profile($result['first_name'], $result['last_name'], $result['picture'], $result['join_date'], $result['bio'], $result['id'], $result['date']);
+        $profile = new Profile($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
         return $profile;
       }
       function saveUsertoJoinTable($id)

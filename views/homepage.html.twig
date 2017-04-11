@@ -1,5 +1,10 @@
 {% include 'top.html.twig' %}
 
-<img src="{{ profile.getPicture }}" height="42" width="42">
+<img src="{{ profile.getPicture }}" height="100" width="100">
+
+<p>{{ profile.getFirstName }}</p>
+{{ profile.getLastName }}
+{{ profile.getBio }}
+{{ profile.getDate }}
 
 {% include 'bottom.html.twig' %}
