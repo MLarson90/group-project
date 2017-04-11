@@ -4,8 +4,10 @@
 * @backupStaticAttributes disabled
 */
 
-$DB = new PDO('mysql:host=localhost;dbname=appdata_test', "root", "root");
+$DB = new PDO('mysql:host=localhost:8889;dbname=appdata_test', "root", "root");
 require_once "src/User.php";
+require_once "src/Group.php";
+require_once "src/Task.php";
 class UserTest extends PHPUnit_Framework_TestCase
 {
   protected function tearDown()
@@ -93,6 +95,17 @@ class UserTest extends PHPUnit_Framework_TestCase
     $newUser->addTask($newTask);
     $result = $newUser->getTask();
     $this->assertEquals($result, [$newTask]);
+  }
+  function test_addGroup()
+  {
+    $newUser = new User ("sample@gmail.com", "password");
+    $newUser->save();
+    $newGroup2 = new Group("More Errands", 1);
+    $newGroup2->save();
+    $groupId = $newGroup2->getId();
+    $newUser->addGroup($groupId);
+    $result = $newUser->getGroup();
+    $this->assertEquals($result, [$newGroup2]);
   }
 }
 ?>

@@ -156,9 +156,15 @@
         return false;
       }
     }
-    // function getGroup(){
-    //   $executed = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_task ON (users_task.user_id = users.id) JOIN task_force ON ()")
-    // }
+    function getGroup(){
+      $returned_groups = $GLOBALS['DB']->query("SELECT task_forces.* FROM users JOIN users_groups ON (users_groups.user_id = users.id) JOIN task_forces ON (task_forces.id = users_groups.group_id) WHERE users.id = {$this->getId()};");
+      $all_groups = array();
+        foreach($returned_groups as $group){
+          $each_group = new Group($group['group_name'], $group['public'], $group['id']);
+          array_push($all_groups, $each_group);
+        }
+      return $all_groups;
+    }
 
       function joinUserProfile($profile_id)
       {

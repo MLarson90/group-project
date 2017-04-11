@@ -1,6 +1,5 @@
 {% include 'top.html.twig' %}
 
-</div>
 <nav>
   <div class="nav-wrapper">
     <div class="container">
@@ -8,25 +7,40 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="#">My Groups</a></li>
         <li><a href="#">My Tasks</a></li>
-        <li><a href="/profile/{{user_id}}">My Profile</a></li>
+        <li><a href="/profile/{{ user_id }}">My Profile</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
+<div class="side-notifications">
+  <ul class="collapsible" data-collapsible="accordion">
 
-<img src="{{ profile.getPicture }}" height="100" width="100">
+    {% for group in groups %}
+      {% set tasks = group.getTaskFromGroup %}
+    <li>
+      <div class="collapsible-header"><span class="new badge">
+      1</span><i class="material-icons"></i>{{ group.getGroupName }}</div>
+      <div class="collapsible-body">
+        {% for task in tasks %}
+        <p>{{task.getName}}</p></br>
+        {% endfor %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 
-<p>{{ profile.getFirstName }}</p>
-{{ profile.getLastName }}
-{{ profile.getBio }}
-{{ profile.getDate }}
 
-{% include 'creategroup.html.twig' %}
+  <img src="{{ profile.getPicture }}" height="100" width="100">
 
-<form action="/group" method="post">
-  <button type="button">Group</button>
-</form>
+  <p>{{ profile.getFirstName }}</p>
+  {{ profile.getLastName }}
+  {{ profile.getBio }}
+  {{ profile.getDate }}
 
+  {% include 'creategroup.html.twig' %}
+
+</div>
 
 {% include 'bottom.html.twig' %}
