@@ -170,7 +170,33 @@
             return false;
           }
       }
+      static function usernameArray()
+      {
+        $usernameArray = array();
+        $executed = $GLOBALS['DB']->query("SELECT * FROM users;");
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($results as $result){
+          array_push($usernameArray, $result['username']);
+        }
+        return $usernameArray;
+      }
+      static function userpasswordArray()
+      {
+        $userpasswordArray = array();
+        $executed = $GLOBALS['DB']->query("SELECT * FROM users;");
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($results as $result){
+          array_push($userpasswordArray, $result['password']);
+        }
+        return $userpasswordArray;
+      }
 
+      function login(){
+        $check = $GLOBALS['DB']->query("SELECT * FROM users WHERE username = '{$this->getUserName()}' AND password = '{$this->getPassword()}';");
+        $result = $check->fetch(PDO::FETCH_ASSOC);
+        $user = new User($result['username'], $result['password'], $result['id']);
+        return $user;
+      }
 
   }
 

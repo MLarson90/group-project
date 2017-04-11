@@ -22,13 +22,16 @@
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
   $app->post("/create_account", function() use ($app) {
-    if ($_POST['password'] == $_POST['password1'])
+    $username = User::usernameArray();
+    if (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 0))
     {
       $new_user = new User($_POST['user_email'], $_POST['password']);
       $new_user->save();
       return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId()));
+    } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
+      return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
     } else {
-      return $app['twig']->render('create_account.html.twig', array('msg'=>'Your passwords need to be the same'));
+      return $app['twig']->render('create_account.html.twig', array('msg'=>'Passwords need to match.'));
     }
   });
   $app->post("/homepage", function() use ($app) {
@@ -39,7 +42,18 @@
     return $app['twig']->render('homepage.html.twig');
   });
   $app->post("/login_user", function() use ($app) {
-    return $app['twig']->render('homepage.html.twig');
+    $username = $_POST['username'];
+    $password = $_POST['userpassword'];
+    $new_user = new User($username, $password);
+    $user = $new_user->login();
+    if ($user != null)
+    {
+      $user_id = $user->getId();
+      $profile = Profile::getProfileUsingId($user_id);
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile));
+    } else {
+      return $app['twig']->render('index.html.twig');
+    }
   });
   return $app;
  ?>

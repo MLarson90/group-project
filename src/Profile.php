@@ -8,7 +8,7 @@
       private $id;
       private $date;
 
-      function __construct($first_name, $last_name, $picture, $bio, $id=null, $date=null)
+      function __construct($first_name, $last_name, $picture=null, $bio, $id=null, $date=null)
       {
           $this->first_name = $first_name;
           $this->last_name = $last_name;
@@ -127,6 +127,13 @@
               return true;
           }
           }
+      }
+      static function getProfileUsingId($user_id)
+      {
+        $executed = $GLOBALS['DB']->prepare("SELECT profiles.* FROM profiles JOIN users_profiles ON (users_profiles.profile_id = profiles.id) JOIN users ON (users_profiles.user_id = users.id) WHERE users.id = $user_id;");
+        $result = $executed->fetch(PDO::FETCH_ASSOC);
+        $profile = new Profile($result['first_name'], $result['last_name'], $result['picture'], $result['join_date'], $result['bio'], $result['id'], $result['date']);
+        return $profile;
       }
 
     }
