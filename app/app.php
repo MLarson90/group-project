@@ -9,7 +9,7 @@
   Debug::enable();
 
   $app = new Silex\Application();
-  $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
+  $DB = new PDO('mysql:host=localhost:8889;dbname=appdata', 'root', 'root');
   $app['debug'] = true;
 
   $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -35,6 +35,10 @@
     } else {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'Passwords need to match.'));
     }
+  });
+
+  $app->get("/profile/{id}", function($id) use ($app) {
+    return $app['twig']->render('profile.html.twig', array('msg'=>'', 'user_id'=>$id ));
   });
 
   $app->post("/homepage", function() use ($app) {
@@ -74,12 +78,11 @@
     } else {
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id']));
     }
-
-  $app->post("/group", function () use ($app) {
-    return $app['twig']->render('group.html.twig', array(''));
   });
 
-  });
+  // $app->post("/group", function () use ($app) {
+  //   return $app['twig']->render('group.html.twig', array(''));
+  // });
 
   return $app;
  ?>

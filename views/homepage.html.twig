@@ -1,5 +1,4 @@
 {% include 'top.html.twig' %}
-
 </div>
 <nav>
   <div class="nav-wrapper">
@@ -8,25 +7,24 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="#">My Groups</a></li>
         <li><a href="#">My Tasks</a></li>
-        <li><a href="/profile/{{user_id}}">My Profile</a></li>
+        <li><a href="/profile/{{ user_id }}">My Profile</a></li>
       </ul>
     </div>
   </div>
 </nav>
+<div class="container">
 
 
-<img src="{{ profile.getPicture }}" height="100" width="100">
+  <img src="{{ profile.getPicture }}" height="100" width="100">
 
-<p>{{ profile.getFirstName }}</p>
-{{ profile.getLastName }}
-{{ profile.getBio }}
-{{ profile.getDate }}
+  <p>{{ profile.getFirstName }}</p>
+  {{ profile.getLastName }}
+  {{ profile.getBio }}
+  {{ profile.getDate }}
 
-{% include 'creategroup.html.twig' %}
+  {% include 'creategroup.html.twig' %}
 
-<form action="/group" method="post">
-  <button type="button">Group</button>
-</form>
+</div>
 
 
 {% include 'bottom.html.twig' %}

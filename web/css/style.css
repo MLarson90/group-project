@@ -28,6 +28,14 @@ body {
   font-weight: 200;
 }
 
+.input-area {
+  margin-top: 100px;
+}
+
+.input-area h5 {
+  margin-bottom: 60px;
+}
+
 /* input field styling */
 
 /* label color */
@@ -51,6 +59,9 @@ input {
    border-bottom: 1px solid #bdbdbd;
  }
  /* label underline focus color */
+ .input-field textarea[type=text]:focus {
+   border-bottom: 1px solid #03a9f4;
+ }
  .input-field input[type=text]:focus {
    border-bottom: 1px solid #03a9f4;
  }

@@ -124,9 +124,9 @@
         $result = $executed->fetch(PDO::FETCH_ASSOC);
         return $result['user_id'];
       }
-      static function findGroupByUserId(){
-        $executed = $GLOBALS['DB']->
-      }
+      // static function findGroupByUserId(){
+      //   $executed = $GLOBALS['DB']->
+      // }
 
     }
 
