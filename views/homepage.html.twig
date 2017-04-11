@@ -1,5 +1,4 @@
 {% include 'top.html.twig' %}
-
 <nav>
   <div class="nav-wrapper">
     <div class="container">
@@ -12,6 +11,9 @@
     </div>
   </div>
 </nav>
+
+{% include 'search.html.twig' %}
+<img src="{{ profile.getPicture }}" height="100" width="100">
 
 <div class="side-notifications">
   <ul class="collapsible" data-collapsible="accordion">

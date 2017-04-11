@@ -66,8 +66,6 @@
       $user = User::findUserbyId($user_id);
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups));
-
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>User::findUserbyId($user_id), 'user_id'=>$user_id, 'groups'=>''));
     }
   });
 
@@ -97,5 +95,14 @@
     return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user));
   });
 
+  $app->post("/search", function() use($app){
+      $search = '%'.$_POST['searchName'].'%';
+      $results = Profile::search($search);
+      if($results != null){
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>''));
+      } else {
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'msg'=>'No Match!'));
+      }
+  });
   return $app;
  ?>
