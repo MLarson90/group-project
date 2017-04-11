@@ -36,6 +36,7 @@
       return $app['twig']->render('create_account.html.twig', array('msg'=>'Passwords need to match.'));
     }
   });
+
   $app->post("/homepage", function() use ($app) {
     $user = User::findUserbyId($_POST['user_id']);
     if(isset($_POST['button'])){
