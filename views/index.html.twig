@@ -1,8 +1,9 @@
 {% include 'top.html.twig' %}
+<div class = "row">
 <form action="/login_user" method="post">
-<div class="form-group">
-<label for="username">Enter your username</label>
-<input type="text" name="username">
+<div class="input-feild col s12">
+  <input placeholder="Enter your user name" type="text" name="username" id="username" class="validate">
+  <label for="username">User name</label>
 <br>
 <label for="userpassword">Enter your user password</label>
 <input type="password" name="userpassword">
@@ -13,4 +14,5 @@
 <form action="/create_user" method="post">
   <button type="submit" name="button">New User</button>
 </form>
+</div>
 {% include 'bottom.html.twig' %}
