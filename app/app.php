@@ -17,7 +17,7 @@
   ));
 
   $app->get("/", function() use ($app) {
-    return $app['twig']->render('index.html.twig', 'msg'=>'');
+    return $app['twig']->render('index.html.twig', array('msg'=>''));
   });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
@@ -56,7 +56,7 @@
       $profile = Profile::getProfileUsingId($user_id);
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile));
     } else {
-      return $app['twig']->render('index.html.twig', 'msg'=>"Sorry, we could not find your account.");
+      return $app['twig']->render('index.html.twig', array('msg'=>"Sorry, we could not find your account."));
     }
   });
   return $app;
