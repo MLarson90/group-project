@@ -42,12 +42,14 @@
   });
 
   $app->post("/homepage", function() use ($app) {
-    $user = User::findUserbyId($_POST['user_id']);
     if(isset($_POST['button'])){
       $new_profile = new Profile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
       $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
       $new_profile->saveUsertoJoinTable($_POST['user_id']);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'user_id'=>$_POST['user_id']));
+      $user = User::findUserbyId($_POST['user_id']);
+      $task = $user->getTask();
+      $task_count = count($task);
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task,'user_id'=>$_POST['user_id']));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
     }
@@ -62,7 +64,10 @@
       return $app['twig']->render('index.html.twig', array('msg'=>"Sorry, we could not find your account."));
     } else {
       $profile = Profile::getProfileUsingId($user_id);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>User::findUserbyId($user_id), 'user_id'=>$user_id));
+      $user = User::findUserbyId($user_id);
+      $task = $user->getTask();
+      $task_count = count($task);
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task,'user_id'=>$user_id));
     }
   });
 

@@ -146,6 +146,23 @@
         }
         $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE task_id = {$this->getId()};");
       }
+      function addGroupToTask($group)
+      {
+        $executed = $GLOBALS['DB']->exec("INSERT INTO tasks_groups (task_id, group_id) VALUES ({$this->getId()}, {$group->getId()});");
+        if ($executed){
+          return true;
+        }else {
+          return false;
+        }
+      }
+      function getGroupFromTask()
+      {
+        $returned_groups = $GLOBALS['DB']->query("SELECT task_forces.* FROM tasks JOIN tasks_groups ON (tasks.id = tasks_groups.task_id) JOIN task_forces ON (tasks_groups.group_id = task_forces.id) WHERE tasks.id = {$this->getId()};");
+        foreach($returned_groups as $group){
+          $newGroup = new Group($group['group_name'], $group['public'], $group['id']);
+          return $newGroup;
+        }
+      }
     }
 
  ?>

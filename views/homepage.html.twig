@@ -1,5 +1,5 @@
 {% include 'top.html.twig' %}
-</div>
+
 <nav>
   <div class="nav-wrapper">
     <div class="container">
@@ -12,6 +12,22 @@
     </div>
   </div>
 </nav>
+
+<div class="side-notifications">
+  <ul class="collapsible" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><span class="new badge">{{ count }}</span><i class="material-icons"></i>Incomplete Task</div>
+    <div class="collapsible-body">
+      {% for task in tasks %}
+      <p>{{ task.getName }}</p></br>
+      {% endfor %}
+    </div>
+  </li>
+</ul>
+</div>
+
+</div>
+
 <div class="container">
 
 
@@ -25,6 +41,5 @@
   {% include 'creategroup.html.twig' %}
 
 </div>
-
 
 {% include 'bottom.html.twig' %}

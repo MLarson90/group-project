@@ -119,14 +119,31 @@
             return false;
           }
       }
+      function addTaskToGroup($task)
+      {
+        $executed = $GLOBALS['DB']->exec("INSERT INTO tasks_groups (task_id, group_id) VALUES ({$task->getId()}, {$this->getId()});");
+        if($executed){
+          return true;
+        }else {
+          return false;
+        }
+      }
+      function getTaskFromGroup()
+      {
+        $returned_task = $GLOBALS['DB']->query("SELECT tasks.* FROM task_forces JOIN tasks_groups ON (task_forces.id = tasks_groups.group_id) JOIN tasks ON (tasks_groups.task_id = tasks.id) WHERE task_forces.id = {$this->getId()};");
+        $tasks = array();
+        foreach($returned_task as $task){
+          $newTask = new Task($task['task_name'], $task['task_description'], $task['assign_time'], $task['due_time'], $task['id']);
+          array_push($tasks, $newTask);
+        }
+        return $tasks;
+      }
+
       function groupAdminId(){
         $executed = $GLOBALS['DB']->query("SELECT user_id FROM users_groups WHERE group_id = {$this->getId()} ORDER BY id LIMIT 1;");
         $result = $executed->fetch(PDO::FETCH_ASSOC);
         return $result['user_id'];
       }
-      // static function findGroupByUserId(){
-      //   $executed = $GLOBALS['DB']->
-      // }
 
     }
 
