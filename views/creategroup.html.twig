@@ -1,0 +1,8 @@
+<form action="/creategroup" method="post">
+  <input type="hidden" name="user_id" value="{{ user.getId }}">
+  <label for="group">Enter the name:</label>
+  <input type="text" name="group">
+  <input type="radio" name="privacy" value="0">Pravite
+  <input type="radio" name="privacy" value="1">Public
+  <button type="submit">Create</button>
+</form>
