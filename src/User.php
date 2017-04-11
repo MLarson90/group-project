@@ -147,9 +147,9 @@
         return $all_task;
       }
 
-    function addGroup($group)
+    function addGroup($group_id)
     {
-      $executed = $GLOBALS['DB']->exec("INSERT INTO users_groups (user_id, group_id) VALUES ({$this->getId()}, {$group->getId()});");
+      $executed = $GLOBALS['DB']->exec("INSERT INTO users_groups (user_id, group_id) VALUES ({$this->getId()}, $group_id);");
       if($executed){
         return true;
       }else{

@@ -7,9 +7,9 @@
 
       function __construct($group_name, $public, $id=null)
       {
-          $this->id = $id;
           $this->group_name = $group_name;
           $this->public = $public;
+          $this->id = $id;
       }
       function getId()
       {
@@ -138,6 +138,13 @@
         }
         return $tasks;
       }
+
+      function groupAdminId(){
+        $executed = $GLOBALS['DB']->query("SELECT user_id FROM users_groups WHERE group_id = {$this->getId()} ORDER BY id LIMIT 1;");
+        $result = $executed->fetch(PDO::FETCH_ASSOC);
+        return $result['user_id'];
+      }
+
     }
 
 

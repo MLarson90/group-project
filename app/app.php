@@ -36,8 +36,8 @@
       return $app['twig']->render('create_account.html.twig', array('msg'=>'Passwords need to match.'));
     }
   });
+
   $app->post("/homepage", function() use ($app) {
-    //$new_user = User::findUserbyId($_POST['user_id']);
     if(isset($_POST['button'])){
       $new_profile = new Profile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
       $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
@@ -45,7 +45,7 @@
       $user = User::findUserbyId($_POST['user_id']);
       $task = $user->getTask();
       $task_count = count($task);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task,'user_id'=>$_POST['user_id']));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
     }
@@ -63,8 +63,28 @@
       $user = User::findUserbyId($user_id);
       $task = $user->getTask();
       $task_count = count($task);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>$user, 'count'=>$task_count, 'tasks'=>$task,'user_id'=>$user_id));
     }
   });
+
+  $app->post("/creategroup", function () use ($app) {
+    if(($_POST['group'] != null) && (!empty($_POST['privacy']))){
+      $group = new Group($_POST['group'], $_POST['privacy']);
+      $group->save();
+      $group_id = $group->getId();
+      $admin_id = $group->groupAdminId();
+      $user = User::findUserbyId($_POST['user_id']);
+      $user->addGroup($group_id);
+      return $app['twig']->render('group.html.twig',array('group_id'=>$group_id, 'admin_id'=>$admin_id, 'user'=>$user));
+    } else {
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id']));
+    }
+
+  $app->post("/group", function () use ($app) {
+    return $app['twig']->render('group.html.twig', array(''));
+  });
+
+  });
+
   return $app;
  ?>
