@@ -22,4 +22,7 @@
   </form>
 </div>
 
-  {% include 'bottom.html.twig' %}
+{% if msg is not empty %}
+{{ msg }}
+{% endif %}
+{% include 'bottom.html.twig' %}

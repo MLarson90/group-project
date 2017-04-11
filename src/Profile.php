@@ -57,9 +57,14 @@
       {
           return $this->bio;
       }
-      function save()
+      function save($first_name, $last_name, $bio, $pic)
       {
-          $executed = $GLOBALS['DB']->exec("INSERT INTO profiles (first_name, last_name, picture, join_date, bio) VALUES ('{$this->getFirstName()}', '{$this->getLastName()}', '{$this->getPicture()}', NOW(), '{$this->getBio()}');");
+          $executed = $GLOBALS['DB']->prepare("INSERT INTO profiles (first_name, last_name, bio, picture, join_date) VALUES (:first_name, :last_name, :bio, :pic, NOW());");
+          $executed->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+          $executed->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+          $executed->bindParam(':bio', $bio, PDO::PARAM_STR);
+          $executed->bindParam(':pic', $pic, PDO::PARAM_STR);
+          $executed->execute();
           if ($executed)
           {
               $this->id = $GLOBALS['DB']->lastInsertId();
@@ -127,6 +132,26 @@
               return true;
           }
           }
+      }
+      static function getProfileUsingId($user_id)
+      {
+        $executed = $GLOBALS['DB']->prepare("SELECT profiles.* FROM profiles JOIN users_profiles ON (users_profiles.profile_id = profiles.id) JOIN users ON (users_profiles.user_id = users.id) WHERE users.id = :id;");
+        $executed->bindParam(':id', $user_id, PDO::PARAM_INT);
+        $executed->execute();
+        $result = $executed->fetch(PDO::FETCH_ASSOC);
+        $profile = new Profile($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
+        return $profile;
+      }
+      function saveUsertoJoinTable($id)
+      {
+        $executed = $GLOBALS['DB']->prepare("INSERT INTO users_profiles (user_id, profile_id) VALUES (:id, {$this->getId()});");
+        $executed->bindParam(':id', $id, PDO::PARAM_INT);
+        $executed->execute();
+        if ($executed) {
+          return true;
+        } else {
+          return false;
+        }
       }
 
     }

@@ -1,4 +1,5 @@
 {% include 'top.html.twig' %}
+
 <form action="/homepage" method="post" enctype="multipart/form-data">
   <div class="input-field col m4">
     <label for="first_name">Enter your first name</label>
@@ -9,8 +10,8 @@
     <input type="text" name="last_name">
   </div>
   <div class="input-field col m4">
-    <label for="profile_pic">Choose your profile picture</label>
-    <input type="file" name="profile_pic">
+    <label for="profile_pic">Enter the <strong>URL</strong> for your profile picture</label>
+    <input type="text" name="profile_pic">
   </div>
   <div class="input-field col m4">
     <label for="bio">Enter a bio</label>
@@ -19,4 +20,8 @@
   <input type="hidden" name="user_id" value="{{ user_id }}">
   <button type="submit" class="btn cyan waves-effect waves-light" name="button">Submit your profile</button>
 </form>
+
+{% if msg is not empty %}
+  {{ msg }}
+{% endif %}
 {% include 'bottom.html.twig' %}
