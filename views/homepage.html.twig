@@ -1,6 +1,5 @@
 {% include 'top.html.twig' %}
 
-</div>
 <nav>
   <div class="nav-wrapper">
     <div class="container">
@@ -8,7 +7,7 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="#">My Groups</a></li>
         <li><a href="#">My Tasks</a></li>
-        <li><a href="/profile/{{user_id}}">My Profile</a></li>
+        <li><a href="/profile/{{ user_id }}">My Profile</a></li>
       </ul>
     </div>
   </div>
@@ -16,6 +15,7 @@
 
 <div class="side-notifications">
   <ul class="collapsible" data-collapsible="accordion">
+
     {% for group in groups %}
       {% set tasks = group.getTaskFromGroup %}
     <li>
@@ -31,17 +31,16 @@
   </ul>
 </div>
 
-<img src="{{ profile.getPicture }}" height="100" width="100">
 
-<p>{{ profile.getFirstName }}</p>
-{{ profile.getLastName }}
-{{ profile.getBio }}
-{{ profile.getDate }}
+  <img src="{{ profile.getPicture }}" height="100" width="100">
 
-{% include 'creategroup.html.twig' %}
+  <p>{{ profile.getFirstName }}</p>
+  {{ profile.getLastName }}
+  {{ profile.getBio }}
+  {{ profile.getDate }}
 
-<form action="/group" method="post">
-  <button type="button">Group</button>
-</form>
+  {% include 'creategroup.html.twig' %}
+
+</div>
 
 {% include 'bottom.html.twig' %}
