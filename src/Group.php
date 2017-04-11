@@ -145,6 +145,20 @@
         return $result['user_id'];
       }
 
+      static function findGroupByUserId($id){
+        $group_array = array();
+        $executed = $GLOBALS['DB']->prepare("SELECT task_forces.* FROM task_forces JOIN users_groups ON (users_groups.group_id = task_forces.id) JOIN users ON (users.id = users_groups.user_id) WHERE users.id = :id;");
+        $executed->bindParam(':id', $id, PDO::PARAM_INT);
+        $executed->execute();
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach($results as $result){
+          $group = new Group($result['group_name'], $result['public'], $result['id']);
+          array_push($group_array, $group);
+        }
+        return $group_array;
+      }
+
+
     }
 
 

@@ -58,7 +58,6 @@
     $username = $_POST['username'];
     $password = $_POST['userpassword'];
     $user_id = User::login($username, $password);
-
     if ($user_id == null)
     {
       return $app['twig']->render('index.html.twig', array('msg'=>"Sorry, we could not find your account."));
@@ -67,6 +66,8 @@
       $user = User::findUserbyId($user_id);
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups));
+
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>User::findUserbyId($user_id), 'user_id'=>$user_id, 'groups'=>''));
     }
   });
 
@@ -80,13 +81,21 @@
       $user->addGroup($group_id);
       return $app['twig']->render('group.html.twig',array('group_id'=>$group_id, 'admin_id'=>$admin_id, 'user'=>$user));
     } else {
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id']));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>''));
     }
   });
 
-  // $app->post("/group", function () use ($app) {
-  //   return $app['twig']->render('group.html.twig', array(''));
-  // });
+  $app->get("/group/{id}", function ($id) use ($app) {
+    $user = User::findUserbyId($id);
+    $groups = Group::findGroupByUserId($id);
+    return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id)));
+  });
+  $app->get("/groupinfo/{group_id}/{user_id}", function ($group_id, $user_id) use ($app) {
+    $group = Group::find($group_id);
+    $admin_id = $group->groupAdminId();
+    $user = User::findUserbyId($user_id);
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user));
+  });
 
   return $app;
  ?>

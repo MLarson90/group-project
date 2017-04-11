@@ -156,6 +156,7 @@
         return false;
       }
     }
+
     function getGroup(){
       $returned_groups = $GLOBALS['DB']->query("SELECT task_forces.* FROM users JOIN users_groups ON (users_groups.user_id = users.id) JOIN task_forces ON (task_forces.id = users_groups.group_id) WHERE users.id = {$this->getId()};");
       $all_groups = array();
