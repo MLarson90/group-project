@@ -57,9 +57,14 @@
       {
           return $this->bio;
       }
-      function save()
+      function save($first_name, $last_name, $bio, $pic)
       {
-          $executed = $GLOBALS['DB']->exec("INSERT INTO profiles (first_name, last_name, picture, join_date, bio) VALUES ('{$this->getFirstName()}', '{$this->getLastName()}', '{$this->getPicture()}', NOW(), '{$this->getBio()}');");
+          $executed = $GLOBALS['DB']->prepare("INSERT INTO profiles (first_name, last_name, bio, picture, join_date) VALUES (:first_name, :last_name, :bio, :pic, NOW());");
+          $executed->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+          $executed->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+          $executed->bindParam(':bio', $bio, PDO::PARAM_STR);
+          $executed->bindParam(':pic', $pic, PDO::PARAM_STR);
+          $executed->execute();
           if ($executed)
           {
               $this->id = $GLOBALS['DB']->lastInsertId();
