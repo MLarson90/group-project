@@ -1,4 +1,22 @@
 {% include 'top.html.twig' %}
+<div class="side-notifications">
+  <ul class="collapsible" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><span class="new badge">{{count}}</span><i class="material-icons"></i>Incomplete Task</div>
+    <div class="collapsible-body">
+      {% for task in tasks %}
+      <p>{{task.getName}}</p></br>
+      {% endfor %}
+    </div>
+  </li>
+</ul>
+</div>
 
+  <img src="{{ profile.getPicture }}" height="100" width="100">
+
+  <p>{{ profile.getFirstName }}</p>
+  {{ profile.getLastName }}
+  {{ profile.getBio }}
+  {{ profile.getDate }}
 
 {% include 'bottom.html.twig' %}

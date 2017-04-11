@@ -1,12 +1,13 @@
 {% include 'top.html.twig' %}
 <div class = "row">
 <form action="/login_user" method="post">
-<div class="input-feild col s12">
-  <input placeholder="Enter your user name" type="text" name="username" id="username" class="validate">
-  <label for="username">User name</label>
+
+<div class="form-group">
+<label for="username">Enter your username</label>
+<input type="text" name="username" required>
 <br>
 <label for="userpassword">Enter your user password</label>
-<input type="password" name="userpassword">
+<input type="password" name="userpassword" required>
 </div>
 <button type="submit" name="button">LogIn</button>
 </form>
@@ -15,4 +16,8 @@
   <button type="submit" name="button">New User</button>
 </form>
 </div>
+{% if msg is not empty %}
+{{ msg }}
+{% endif %}
+
 {% include 'bottom.html.twig' %}

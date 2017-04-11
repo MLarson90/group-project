@@ -4,8 +4,10 @@
 * @backupStaticAttributes disabled
 */
 
-$DB = new PDO('mysql:host=localhost;dbname=appdata_test', "root", "root");
+$DB = new PDO('mysql:host=localhost:8889;dbname=appdata_test', "root", "root");
 require_once "src/Group.php";
+require_once "src/Task.php";
+require_once "src/User.php";
 
 class GroupTest extends PHPUnit_Framework_TestCase
 {
@@ -77,6 +79,20 @@ class GroupTest extends PHPUnit_Framework_TestCase
       $newGroup->delete();
       $result = Group::getAll();
       $this->assertEquals([$newGroup2], $result);
+    }
+    function test_addTask()
+    {
+      $newGroup = new Group ("Errands", 1);
+      $newGroup->save();
+      $test_task = new Task("shopping", "get groceries", "2017-04-10", "2017-06-10");
+      $test_task->save();
+      $newTask = new Task ("plan vacation", "list travel details", "2017-05-10", "2017-05-15");
+      $newTask->save();
+      $newGroup->addTaskToGroup($test_task);
+      $newGroup->addTaskToGroup($newTask);
+      $result = $newGroup->getTaskFromGroup();
+      $this->assertEquals($result, [$test_task, $newTask]);
+
     }
   }
 

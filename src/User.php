@@ -156,9 +156,15 @@
         return false;
       }
     }
-    // function getGroup(){
-    //   $executed = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_task ON (users_task.user_id = users.id) JOIN task_force ON ()")
-    // }
+    function getGroup(){
+      $returned_groups = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_groups ON (users_groups.user_id = users.id) JOIN task_force ON (task_force.id = users_groups.group_id) WHERE users.id = {$this->getId()};");
+      $all_groups = array();
+        foreach($returned_groups as $group){
+          $each_group = new Group($group['group_name'], $group['public'], $group['id']);
+          array_push($all_groups, $each_group);
+        }
+      return $all_groups;
+    }
 
       function joinUserProfile($profile_id)
       {
@@ -170,7 +176,37 @@
             return false;
           }
       }
+      static function usernameArray()
+      {
+        $usernameArray = array();
+        $executed = $GLOBALS['DB']->query("SELECT * FROM users;");
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($results as $result){
+          array_push($usernameArray, $result['username']);
+        }
+        return $usernameArray;
+      }
+      static function userpasswordArray()
+      {
+        $userpasswordArray = array();
+        $executed = $GLOBALS['DB']->query("SELECT * FROM users;");
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($results as $result){
+          array_push($userpasswordArray, $result['password']);
+        }
+        return $userpasswordArray;
+      }
 
+      static function login($username, $password)
+      {
+        $check = $GLOBALS['DB']->prepare("SELECT * FROM users WHERE username = :username AND password = :password;");
+        $check->bindParam(':username', $username, PDO::PARAM_STR);
+        $check->bindParam(':password', $password, PDO::PARAM_STR);
+        $check->execute();
+        $result = $check->fetch(PDO::FETCH_ASSOC);
+        $user = new User($result['username'], $result['password'], $result['id']);
+        return $result['id'];
+      }
 
   }
 
