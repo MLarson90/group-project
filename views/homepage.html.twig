@@ -6,9 +6,9 @@
     <div class="container">
       <a href="/" class="brand-logo center">everydone</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="#">My Groups</a></li>
+        <li><a href="/group/{{ user_id }}">My Groups</a></li>
         <li><a href="#">My Tasks</a></li>
-        <li><a href="/profile/{{user_id}}">My Profile</a></li>
+        <li><a href="/profile/{{ user_id }}">My Profile</a></li>
       </ul>
     </div>
   </div>
@@ -24,9 +24,12 @@
 
 {% include 'creategroup.html.twig' %}
 
-<form action="/group" method="post">
-  <button type="button">Group</button>
-</form>
+{% if groups is not empty %}
+  {% for group in groups %}
+    <li><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></li>
+  {% endfor %}
+{% endif %}
+
 
 
 {% include 'bottom.html.twig' %}

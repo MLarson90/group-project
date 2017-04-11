@@ -43,22 +43,19 @@
       $new_profile = new Profile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
       $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
       $new_profile->saveUsertoJoinTable($_POST['user_id']);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'user_id'=>$_POST['user_id']));
-    } else {
-        return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'user_id'=>$_POST['user_id'], 'groups'=>''));
     }
   });
   $app->post("/login_user", function() use ($app) {
     $username = $_POST['username'];
     $password = $_POST['userpassword'];
     $user_id = User::login($username, $password);
-
     if ($user_id == null)
     {
       return $app['twig']->render('index.html.twig', array('msg'=>"Sorry, we could not find your account."));
     } else {
       $profile = Profile::getProfileUsingId($user_id);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>User::findUserbyId($user_id), 'user_id'=>$user_id));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>User::findUserbyId($user_id), 'user_id'=>$user_id, 'groups'=>''));
     }
   });
 
@@ -72,14 +69,19 @@
       $user->addGroup($group_id);
       return $app['twig']->render('group.html.twig',array('group_id'=>$group_id, 'admin_id'=>$admin_id, 'user'=>$user));
     } else {
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id']));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>''));
     }
-
-  $app->post("/group", function () use ($app) {
-    return $app['twig']->render('group.html.twig', array(''));
   });
-
+  $app->get("/group/{id}", function ($id) use ($app) {
+    $user = User::findUserbyId($id);
+    $groups = Group::findGroupByUserId($id);
+    return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id)));
   });
-
+  $app->get("/groupinfo/{group_id}/{user_id}", function ($group_id, $user_id) use ($app) {
+    $group = Group::find($group_id);
+    $admin_id = $group->groupAdminId();
+    $user = User::findUserbyId($user_id);
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user));
+  });
   return $app;
  ?>

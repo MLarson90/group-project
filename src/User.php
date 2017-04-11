@@ -156,9 +156,6 @@
         return false;
       }
     }
-    // function getGroup(){
-    //   $executed = $GLOBALS['DB']->query("SELECT task_force.* FROM users JOIN users_task ON (users_task.user_id = users.id) JOIN task_force ON ()")
-    // }
 
       function joinUserProfile($profile_id)
       {
