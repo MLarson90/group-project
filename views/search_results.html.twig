@@ -1,0 +1,12 @@
+{% include 'top.html.twig' %}
+{% if profiles is not empty %}
+{% for profile in profiles %}
+<img src="{{ profile.getPicture }}" height="100" width="100">
+  <li><a href="/">{{ profile.getFirstName }} {{ profile.getLastName }}</a></li>
+{% endfor %}
+{% endif %}
+
+{% if msg is not empty %}
+{{ msg }}
+{% endif %}
+{% include 'bottom.html.twig' %}

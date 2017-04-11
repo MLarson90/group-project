@@ -57,8 +57,17 @@
       return $app['twig']->render('index.html.twig', array('msg'=>"Sorry, we could not find your account."));
     } else {
       $profile = Profile::getProfileUsingId($user_id);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'msg'=>''));
     }
+  });
+  $app->post("/search", function() use($app){
+      $search = '%'.$_POST['searchName'].'%';
+      $results = Profile::search($search);
+      if($results != null){
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>''));
+      } else {
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'msg'=>'No Match!'));
+      }
   });
   return $app;
  ?>

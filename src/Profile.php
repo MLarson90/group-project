@@ -95,14 +95,19 @@
           return $profile;
       }
 
-      static function findByName($name)
+      static function findByName($first_name)
       {
+          $returned_profiles = array();
           $executed = $GLOBALS['DB']->prepare("SELECT * FROM profiles WHERE first_name = :name;");
-          $executed->bindParam(':name', $name, PDO::PARAM_STR);
+          $executed->bindParam(':name', $first_name, PDO::PARAM_STR);
           $executed->execute();
-          $result = $executed->fetch(PDO::FETCH_ASSOC);
-          $profile = new Profile ($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
-          return $profile;
+          $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($results as $result)
+          {
+              $profile = new Profile ($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
+              array_push($returned_profiles, $profile);
+          }
+          return $returned_profiles;
       }
       function updateFirstName($new_first_name, $new_last_name, $new_pic, $new_bio)
       {
@@ -153,10 +158,50 @@
           return false;
         }
       }
+      static function findProfilebyLastName($last_name)
+      {
+          $returned_profiles = array();
+          $executed = $GLOBALS['DB']->prepare("SELECT * FROM profiles WHERE last_name = :name;");
+          $executed->bindParam(':name', $last_name, PDO::PARAM_STR);
+          $executed->execute();
+          $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($results as $result)
+          {
+              $profile = new Profile ($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
+              array_push($returned_profiles, $profile);
+          }
+          return $returned_profiles;
+      }
+      static function findByFullName($first_name, $last_name)
+      {
+          $returned_profiles = array();
+          $executed = $GLOBALS['DB']->prepare("SELECT * FROM profiles WHERE first_name = :name AND last_name = :lastname;");
+          $executed->bindParam(':name', $first_name, PDO::PARAM_STR);
+          $executed->bindParam(':lastname', $last_name, PDO::PARAM_STR);
+          $executed->execute();
+          $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($results as $result)
+          {
+              $profile = new Profile ($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
+              array_push($returned_profiles, $profile);
+          }
+          return $returned_profiles;
+      }
 
+
+    static function search($search){
+      $returned_array = array();
+      $executed = $GLOBALS['DB']->prepare("SELECT * FROM profiles WHERE first_name LIKE :search OR last_name LIKE :search;");
+      $executed->bindParam(':search', $search, PDO::PARAM_STR);
+      $executed->execute();
+      $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+      foreach($results as $result){
+        $new_profile = new Profile($result['first_name'], $result['last_name'], $result['picture'], $result['bio'], $result['id'], $result['join_date']);
+        array_push($returned_array, $new_profile);
+      }
+      return $returned_array;
     }
 
 
-
-
+  }
 ?>
