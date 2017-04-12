@@ -9,7 +9,7 @@
   Debug::enable();
 
   $app = new Silex\Application();
-  $DB = new PDO('mysql:host=localhost:8889;dbname=appdata', 'root', 'root');
+  $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
   $app['debug'] = true;
 
   $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -48,8 +48,8 @@
       $new_profile->saveUsertoJoinTable($_POST['user_id']);
       $user = User::findUserbyId($_POST['user_id']);
       $groups = $user->getGroup();
-      var_dump($groups);
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'groups'=>$groups,'user_id'=>$_POST['user_id']));
+      $group_requests = $user->findGroupRequest();
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'groups'=>$groups,'user_id'=>$_POST['user_id'], 'group_requests'=>$group_requests));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
     }
@@ -65,7 +65,8 @@
       $profile = Profile::getProfileUsingId($user_id);
       $user = User::findUserbyId($user_id);
       $groups = $user->getGroup();
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups));
+      $group_requests = $user->findGroupRequest();
+      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups, 'group_requests'=>$group_requests));
     }
   });
 
@@ -77,22 +78,28 @@
       $admin_id = $group->groupAdminId();
       $user = User::findUserbyId($_POST['user_id']);
       $user->addGroup($group_id);
-      return $app['twig']->render('group.html.twig',array('group_id'=>$group_id, 'admin_id'=>$admin_id, 'user'=>$user));
+      $group_requests = $user->findGroupRequest();
+      $groups = $user->getGroup();
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests));
     } else {
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>''));
+      $user = User::findUserbyId($_POST['user_id']);
+      $group_requests = $user->findGroupRequest();
+      $groups = $user->getGroup();
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests));
     }
   });
 
   $app->get("/group/{id}", function ($id) use ($app) {
     $user = User::findUserbyId($id);
     $groups = Group::findGroupByUserId($id);
-    return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id)));
+    $group_requests = $user->findGroupRequest();
+    return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id), 'group_requests'=>$group_requests));
   });
   $app->get("/groupinfo/{group_id}/{user_id}", function ($group_id, $user_id) use ($app) {
     $group = Group::find($group_id);
     $admin_id = $group->groupAdminId();
     $user = User::findUserbyId($user_id);
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user));
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>''));
   });
 
   $app->post("/search", function() use($app){
@@ -104,5 +111,39 @@
         return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'msg'=>'No Match!'));
       }
   });
+
+  $app->post("/sendinvite", function() use($app){
+    if(!empty($_POST['user'])){
+      $user_name_array = User::usernameArray();
+      if(in_array($_POST['user'], $user_name_array)){
+        $user = User::findByUserName($_POST['user']);
+        $user->saveGroupRequest($_POST['group_id'], $_POST['user_id']);
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!'));
+      } else {
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!'));
+      }
+    } else {
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>''));
+    }
+  });
+
+  $app->post("/groupaccept", function () use ($app) {
+    $user = User::findUserbyId($_POST['user_id']);
+    $user->addGroup($_POST['group_id']);
+    $user->deleteGroupRequest($_POST['group_id'], $_POST['sender_id']);
+    $group_requests = $user->findGroupRequest();
+    $groups = $user->getGroup();
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests));
+  });
+
+  $app->post("/grouprefuse", function () use ($app) {
+    $user = User::findUserbyId($_POST['user_id']);
+    $user->deleteGroupRequest($_POST['group_id'], $_POST['sender_id']);
+    $group_requests = $user->findGroupRequest();
+    $groups = $user->getGroup();
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests));
+  });
+
+
   return $app;
  ?>
