@@ -4,7 +4,7 @@
 * @backupStaticAttributes disabled
 */
 
-$DB = new PDO('mysql:host=localhost;dbname=appdata_test', "root", "root");
+$DB = new PDO('mysql:host=localhost:8889;dbname=appdata_test', "root", "root");
 require_once "src/Task.php";
 require_once "src/User.php";
 require_once "src/Group.php";
@@ -19,10 +19,9 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     function test_save()
     {
-      $newTask = new Task ("shopping", "get groceries", "2017-04-10", "2017-06-10");
-      $newTask->save();
-      $result = Task::getAll();
-      $this->assertEquals($result, [$newTask]);
+      $newTask = new Task ("shopping", "get groceries");
+      $result = $newTask->save();
+      $this->assertTrue($result, "Fail");
     }
 
     function test_updateAll()
@@ -46,8 +45,8 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     function test_getAll()
     {
-      $newTask = new Task ("shopping", "get groceries", "2017-04-10", "2017-06-10");
-      $newTask2 = new Task ("plan vacation", "list travel details", "2017-05-10", "2017-05-15");
+      $newTask = new Task ("shopping", "get groceries");
+      $newTask2 = new Task ("plan vacation", "list travel details");
       $newTask->save();
       $newTask2->save();
       $result = Task::getAll();
@@ -56,10 +55,10 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     function test_delete()
     {
-      $test_task = new Task("shopping", "get groceries", "2017-04-10", "2017-06-10");
+      $test_task = new Task("shopping", "get groceries");
       $test_task->save();
 
-      $test_task2 = new Task("hiking", "get high", "2017-04-10", "2017-06-10");
+      $test_task2 = new Task("hiking", "get high");
       $test_task2->save();
 
       $test_user = new User("Mike", "password");
@@ -74,7 +73,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     function test_addUser()
     {
-      $test_task = new Task("shopping", "get groceries", "2017-04-10", "2017-06-10");
+      $test_task = new Task("shopping", "get groceries");
       $test_task->save();
 
       $test_user = new User("New Guy", "password");
@@ -87,7 +86,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     function test_getUsers()
     {
-      $test_task = new Task("shopping", "get groceries", "2017-04-10", "2017-06-10");
+      $test_task = new Task("shopping", "get groceries");
       $test_task->save();
 
       $test_user = new User("New Guy", "password");
@@ -103,7 +102,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
     }
     function test_addGroup()
     {
-      $test_task = new Task("shopping", "get groceries", "2017-04-10", "2017-06-10");
+      $test_task = new Task("shopping", "get groceries");
       $test_task->save();
       $test_group = new Group("Errands", 1);
       $test_group->save();
