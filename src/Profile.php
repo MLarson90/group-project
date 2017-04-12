@@ -208,6 +208,13 @@
       $user = new User($result['username'], $result['password'], $result['id']);
       return $user;
     }
+     function findUserbyProfileIdNotStatic($profile_id)
+    {
+      $executed = $GLOBALS['DB']->query("SELECT users.* FROM users JOIN users_profiles ON (users_profiles.user_id = users.id) JOIN profiles ON (users_profiles.profile_id = profiles.id) WHERE profiles.id = $profile_id;");
+      $result = $executed->fetch(PDO::FETCH_ASSOC);
+      $user = new User($result['username'], $result['password'], $result['id']);
+      return $user;
+    }
 
   }
 ?>
