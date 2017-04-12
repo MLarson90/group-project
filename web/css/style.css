@@ -1,5 +1,5 @@
 header, main, footer {
- padding-left: 300px;
+ padding-left: 200px;
 }
 
 @media only screen and (max-width : 992px) {
@@ -12,16 +12,67 @@ nav {
   background: #fff;
 }
 
+
 nav li a{
   color: #bdbdbd;
 }
+
 
 body {
   color: #bdbdbd;
 }
 
-#logo-container a {
+h2.header {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.myprofile {
+  margin: 50px 0;
+}
+
+.card-content p {
+  font-size: 18px;
+  font-weight: 200;
+}
+
+.card-content span {
+  font-size: 20px;
+  font-weight: 100;
+  color: #00bcd4;
+}
+
+.homepage {
+  margin-bottom: 30px;
+}
+
+.linkbackground {
+  width: 100%;
+  height: 100%;
+  /*background: #bdbdbd;*/
+}
+
+.navsearch {
+  margin-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.card-action {
+  color: #03a9f4 !important;
+}
+
+#logo-container {
+  height: 100px;
+  /*background: red;*/
+  padding-top: 20px;
+  margin-bottom: 12px;
+  font-size: 30px;
   color: #bdbdbd;
+}
+
+.twitter-timeline {
+  margin-top: 200px;
 }
 
 .nav-wrapper .brand-logo {

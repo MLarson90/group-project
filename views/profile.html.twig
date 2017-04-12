@@ -1,18 +1,28 @@
 {% include 'top.html.twig' %}
-
-<nav>
-  <div class="container">
-    <div class="nav-wrapper">
-      <a href="/" class="brand-logo center">everydone</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="#">My Groups</a></li>
-        <li><a href="#">My Tasks</a></li>
-        <li><a href="/homepage/{{ user_id }}">My Profile</a></li>
-      </ul>
+<div class = "container">
+  <div class = "row">
+    <div class = "col m12">
+      <div class = "myprofile">
+        <h2 class="header">{{ profile.getFirstName }} {{ profile.getLastName }}</h2>
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="{{ profile.getPicture }}" height="160" width="160">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <p>Joined <span class = "brand">everydone</span> on {{ profile.getDate }}</p>
+              <p>{{ profile.getBio }}</p>
+            </div>
+            <div class="linkbackground">
+              <div class="card-action">
+                <a href="/profile/{{ user_id }}">Edit Profile</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</nav>
-
 <div class="container">
   <div class="input-area">
     <h5>Use the fields below to edit your profile</h5>
@@ -46,5 +56,7 @@
 {% if msg is not empty %}
   {{ msg }}
 {% endif %}
+
+{% include 'sidenav.html.twig' %}
 
 {% include 'bottom.html.twig' %}
