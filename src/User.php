@@ -258,11 +258,8 @@
       }
       return $friends;
     }
-    function saveFriendRequest($sender_id, $receiver_id){
-      $executed = $GLOBALS['DB']->prepare("INSERT INTO friend_requests (sender_id, user_id) VALUES (:sender_id, {$this->getId()}, :receiver_id);");
-      $executed->bindParam(':sender_id', $sender_id, PDO::PARAM_INT);
-      $executed->bindParam(':receiver_id', $receiver_id, PDO::PARAM_INT);
-      $executed->execute();
+    function saveFriendRequest($receiver_id){
+      $executed = $GLOBALS['DB']->exec("INSERT INTO friend_request (sender_id, receiver_id) VALUES ({$this->getId()}, $receiver_id);");
       if($executed){
         return true;
       } else {
@@ -271,13 +268,18 @@
     }
 
     function findFriendRequest(){
-      $executed = $GLOBALS['DB']->query("SELECT * FROM users JOIN friend_requests ON (friend_requests.receiver_id = users.id) JOIN friend_requests ON (friend_requests.sender_id = sender.id) WHERE users.id = {$this->getId()};");
-      $result = $executed->fetchAll(PDO::FETCH_ASSOC);
-      return $result;
+      $executed = $GLOBALS['DB']->query("SELECT * FROM friend_request WHERE (friend_request.receiver_id = {$this->getId()});");
+      $returned_request = $executed->fetchAll(PDO::FETCH_ASSOC);
+      $allrequest= array();
+      foreach($returned_request as $request){
+        $newRequest = Profile::getProfileUsingId($request['sender_id']);
+        array_push($allrequest, $newRequest);
+      }
+      return $allrequest;
     }
 
   function deleteFriendRequest($sender_id, $receiver_id){
-    $executed = $GLOBALS['DB']->prepare("DELETE FROM friend_requests WHERE receiver_id = {$this->getId()} AND sender_id = :sender_id AND receiver_id = :receiver_id;");
+    $executed = $GLOBALS['DB']->prepare("DELETE FROM friend_request WHERE receiver_id = {$this->getId()} AND sender_id = :sender_id AND receiver_id = :receiver_id;");
     $executed->bindParam(':sender_id', $sender_id, PDO::PARAM_INT);
     $executed->bindParam(':receiver_id', $receiver_id, PDO::PARAM_INT);
     $executed->execute();

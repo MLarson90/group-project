@@ -42,7 +42,21 @@
 
 
   {% include 'creategroup.html.twig' %}
-
+  {% if user_request is not empty %}
+  {% for user_requests in user_request %}
+    <form action="/friendaccept" method="post">
+      <input type="hidden" name="receiver_id" value="{{ user_requests.id }}">
+      <input type="hidden" name="sender_id" value="{{ user_requests.id }}">
+      <p><img src="{{ user_requests.getPicture }}" height="25" width="25"> {{ user_requests.getFirstName }}would like to add you as an associate</p>
+      <button type="submit">Accept</button>
+    </form>
+    <form action="/grouprefuse" method="post">
+      <input type="hidden" name="receiver_id" value="{{ user_requests.id }}">
+      <input type="hidden" name="sender_id" value="{{ user_requests.id }}">
+      <button type="submit">Refuse</button>
+    </form>
+  {% endfor %}
+  {% endif %}
   {% if group_requests is not empty %}
     {% for group_request in group_requests %}
       <form action="/groupaccept" method="post">
