@@ -17,9 +17,7 @@
 <form action="/sendFriendRequest" method="post">
   <input type="hidden" name="sender_id" value="{{ id }}">
   <input type="hidden" name="receiver_id" value="{{ user_id }}">
-  <label for="user">User Name:</label>
-  <input type="text" name="user">
-  <button type="submit">Invite</button>
+  <button type="submit">Add Associate</button>
 </form>
 
 
@@ -29,8 +27,8 @@
     {% for group in groups %}
       {% set tasks = group.getTaskFromGroup %}
     <li>
-      <div class="collapsible-header"><span class="new badge">
-      1</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
+      <div class="collapsible-header"><span class="badge">
+      {{ tasks|length }}</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
       <div class="collapsible-body">
         {% for task in tasks %}
         <p>{{task.getName}}</p></br>
