@@ -4,7 +4,7 @@
 * @backupStaticAttributes disabled
 */
 
-$DB = new PDO('mysql:host=localhost;dbname=appdata_test', "root", "root");
+$DB = new PDO('mysql:host=localhost:8889;dbname=appdata_test', "root", "root");
 
 require_once "src/Profile.php";
 

@@ -4,7 +4,7 @@
 * @backupStaticAttributes disabled
 */
 
-$DB = new PDO('mysql:host=localhost;dbname=appdata_test', "root", "root");
+$DB = new PDO('mysql:host=localhost:8889;dbname=appdata_test', "root", "root");
 require_once "src/User.php";
 require_once "src/Group.php";
 require_once "src/Task.php";
@@ -106,6 +106,19 @@ class UserTest extends PHPUnit_Framework_TestCase
     $newUser->addGroup($groupId);
     $result = $newUser->getGroup();
     $this->assertEquals($result, [$newGroup2]);
+  }
+  function test_addFriend()
+  {
+    $newUser = new User ('sample@gmail.com', 'password');
+    $newUser2 = new User ('samdfdle@gmail.com', 'pasdfdsword');
+    $profile = new Profile("max", "larson", "picture","I am cool");
+    $profile->save($profile->getFirstName(), $profile->getLastName(), $profile->getPicture(), $profile->getBio());
+    $newUser->save();
+    $newUser2->save();
+    $newUser2->joinUserProfile($profile->getId());
+    $newUser->addFriend($newUser2);
+    $result = $newUser->findAllFriends();
+    $this->assertEquals([Profile::getProfileUsingId($newUser2->getId())], $result);
   }
 }
 ?>

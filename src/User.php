@@ -238,6 +238,26 @@
         return true;
       }
     }
+    function addFriend($friend)
+    {
+        $executed = $GLOBALS['DB']->exec("INSERT INTO friends (friend_one, friend_two) VALUES ({$this->getId()}, {$friend->getId()});");
+        if($executed){
+          return true;
+        }else{
+          return false;
+        }
+    }
+    function findAllFriends()
+    {
+      $executed = $GLOBALS['DB']->query("SELECT friends.friend_two, users.username, profiles.* FROM friends JOIN users ON(users.id = friends.friend_two) JOIN users_profiles ON (users_profiles.user_id = friends.friend_two) JOIN profiles ON (users_profiles.profile_id = profiles.id) WHERE friends.friend_one = {$this->getId()};");
+      $friends = array();
+      $returned_friends = $executed->fetchAll(PDO::FETCH_ASSOC);
+      foreach($returned_friends as $profile){
+        $newProfile = new Profile ($profile['first_name'], $profile['last_name'], $profile['picture'], $profile['bio'],$profile['id'],$profile['join_date']);
+        array_push($friends, $newProfile);
+      }
+      return $friends;
+    }
 
   }
 
