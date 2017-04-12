@@ -29,7 +29,6 @@
     <div class = "col m6">
       <h5 class = "homepage">My Groups</h5>
         <ul class="collapsible" data-collapsible="accordion">
-
           {% for group in groups %}
             {% set tasks = group.getTaskFromGroup %}
           <li>
@@ -67,7 +66,45 @@
         </form>
       {% endfor %}
     {% endif %}
-  </div>
+    </div>
+    {% if user_request is not empty %}
+    {% for user_requests in user_request %}
+    {% set user = user_requests.findUserbyProfileIdNotStatic(user_requests.getId)%}
+      <form action="/friendaccept" method="post">
+        <input type="hidden" name="receiver_id" value="{{ user_id }}">
+        <input type="hidden" name="sender_id" value="{{ user.id }}">
+        <p><img src="{{ user_requests.getPicture }}" height="35" width="35"> {{ user_requests.getFirstName }} {{ user_requests.getLastName }} would like to add you as an associate</p>
+        <button type="submit">Accept</button>
+      </form>
+      <form action="/friendrefuse" method="post">
+        <input type="hidden" name="receiver_id" value="{{ user_requests.id }}">
+        <input type="hidden" name="sender_id" value="{{ user_requests.id }}">
+        <button type="submit">Refuse</button>
+      </form>
+    {% endfor %}
+    {% endif %}
+
+
+  <img src="{{ profile.getPicture }}" height="100" width="100">
+
+  <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
+  <p>Memeber since {{ profile.getDate }}</p>
+  <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
+
+
+
+  {% include 'creategroup.html.twig' %}
+
+
+  {% if friends is not empty %}
+<h3> My associates </h3>
+{% for friend in friends %}
+<p> {{ friend.getFirstName}} {{ friend.getLastName }} <img src="{{ friend.getPicture }}" height="35" width="35"></p>
+{% endfor %}
+  {% else %}
+  <h4> You do not have any associates yet </h4>
+  {% endif %}
+
 </div>
 
 {% include 'sidenav.html.twig' %}

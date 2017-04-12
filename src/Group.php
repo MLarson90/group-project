@@ -158,6 +158,15 @@
         return $group_array;
       }
 
+      function findAllUsersInTheGroup(){
+        $user_name_in_group_array = array();
+        $executed = $GLOBALS['DB']->query("SELECT users.* FROM users JOIN users_groups ON (users_groups.user_id = users.id) WHERE users_groups.group_id = {$this->getId()};");
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach($results as $result){
+          array_push($user_name_in_group_array, $result['username']);
+        }
+        return $user_name_in_group_array;
+      }
 
     }
 
