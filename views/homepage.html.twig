@@ -13,9 +13,9 @@
 </nav>
 
 {% include 'search.html.twig' %}
-
 <div class="side-notifications">
   <ul class="collapsible" data-collapsible="accordion">
+
 
     {% for group in groups %}
       {% set tasks = group.getTaskFromGroup %}

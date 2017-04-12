@@ -37,8 +37,15 @@
     }
   });
 
-  $app->get("/profile/{id}", function($id) use ($app) {
-    return $app['twig']->render('profile.html.twig', array('msg'=>'', 'user_id'=>$id ));
+  $app->get("/viewprofile/{id}", function($id) use ($app) {
+    $profile = Profile::findProfile($id);
+    $user = Profile::findUserbyProfileId($id);
+    $user_id = $user->getId();
+    $groups = $user->getGroup();
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$id, 'user_id'=>$user_id, 'groups' => $groups ));
+  });
+  $app->post("/viewprofile/{id}", function($id) use ($app) {
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile, 'user_id'=>$id ));
   });
 
   $app->post("/homepage", function() use ($app) {
@@ -71,7 +78,7 @@
   });
 
   $app->post("/creategroup", function () use ($app) {
-    if(($_POST['group'] != null) && (!empty($_POST['privacy']))){
+    if(($_POST['group'] != null) && (isset($_POST['privacy']))){
       $group = new Group($_POST['group'], $_POST['privacy']);
       $group->save();
       $group_id = $group->getId();
@@ -102,13 +109,14 @@
     return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>''));
   });
 
-  $app->post("/search", function() use($app){
+  $app->post("/search/{id}", function($id) use($app){
+      $user = User::findUserbyId($id);
       $search = '%'.$_POST['searchName'].'%';
       $results = Profile::search($search);
       if($_POST['searchName'] != null){
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>''));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>'', 'user'=>$user));
       } else {
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'msg'=>'No Match!'));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'user'=>$user, 'msg'=>'No Match!'));
       }
   });
 
