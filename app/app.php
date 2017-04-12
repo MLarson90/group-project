@@ -71,7 +71,7 @@
   });
 
   $app->post("/creategroup", function () use ($app) {
-    if(($_POST['group'] != null) && (!empty($_POST['privacy']))){
+   if(($_POST['group'] != null) && (isset($_POST['privacy']))){
       $group = new Group($_POST['group'], $_POST['privacy']);
       $group->save();
       $group_id = $group->getId();
