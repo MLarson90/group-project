@@ -37,8 +37,15 @@
     }
   });
 
-  $app->get("/profile/{id}", function($id) use ($app) {
-    return $app['twig']->render('profile.html.twig', array('msg'=>'', 'user_id'=>$id ));
+  $app->get("/viewprofile/{id}", function($id) use ($app) {
+    $profile = Profile::findProfile($id);
+    $user = Profile::findUserbyProfileId($id);
+    $user_id = $user->getId();
+    $groups = $user->getGroup();
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$id, 'user_id'=>$user_id, 'groups' => $groups ));
+  });
+  $app->post("/viewprofile/{id}", function($id) use ($app) {
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile, 'user_id'=>$id ));
   });
 
   $app->post("/homepage", function() use ($app) {
@@ -99,16 +106,18 @@
     $group = Group::find($group_id);
     $admin_id = $group->groupAdminId();
     $user = User::findUserbyId($user_id);
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>''));
+    $tasks = Task::getAllByGroupId($group_id);
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>'', 'tasks'=>$tasks));
   });
 
-  $app->post("/search", function() use($app){
+  $app->post("/search/{id}", function($id) use($app){
+      $user = User::findUserbyId($id);
       $search = '%'.$_POST['searchName'].'%';
       $results = Profile::search($search);
       if($_POST['searchName'] != null){
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>''));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>'', 'user'=>$user));
       } else {
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'msg'=>'No Match!'));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'user'=>$user, 'msg'=>'No Match!'));
       }
   });
 
@@ -118,12 +127,15 @@
       if(in_array($_POST['user'], $user_name_array)){
         $user = User::findByUserName($_POST['user']);
         $user->saveGroupRequest($_POST['group_id'], $_POST['user_id']);
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!'));
+        $tasks = Task::getAllByGroupId($_POST['group_id']);
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks));
       } else {
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!'));
+        $tasks = Task::getAllByGroupId($_POST['group_id']);
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks));
       }
     } else {
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>''));
+      $tasks = Task::getAllByGroupId($_POST['group_id']);
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'', 'tasks'=>$tasks));
     }
   });
 
@@ -142,6 +154,16 @@
     $group_requests = $user->findGroupRequest();
     $groups = $user->getGroup();
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests));
+  });
+
+  $app->post("/createtask", function () use ($app) {
+    if(isset($_POST['createtask'])){
+      $new_task = new Task($_POST['task'], $_POST['description']);
+      $new_task->save();
+      $new_task->addGroupToTask($_POST['group_id']);
+      $tasks = Task::getAllByGroupId($_POST['group_id']);
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks));
+    }
   });
 
 
