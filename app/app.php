@@ -21,7 +21,9 @@
   });
 
   $app->get("/profile/{id}", function($id) use ($app) {
-    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>''));
+    $user = User::findUserbyId($id);
+    $profile = Profile::getProfileUsingId($id);
+    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>'', 'user' => $user, 'profile' => $profile));
   });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
