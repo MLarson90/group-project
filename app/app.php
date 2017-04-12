@@ -19,6 +19,10 @@
   $app->get("/", function() use ($app) {
     return $app['twig']->render('index.html.twig', array('msg'=>''));
   });
+
+  $app->get("/profile/{id}", function($id) use ($app) {
+    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>''));
+  });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
