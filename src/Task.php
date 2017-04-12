@@ -7,7 +7,7 @@
     private $due_time;
     private $id;
 
-    function __construct($task_name, $task_description, $assign_time, $due_time, $id=null)
+    function __construct($task_name, $task_description, $assign_time=null, $due_time=null, $id=null)
       {
         $this->task_name = $task_name;
         $this->task_description = $task_description;
@@ -62,14 +62,14 @@
 
       function save()
       {
-        $executed = $GLOBALS['DB']->exec("INSERT INTO tasks (task_name, task_description, assign_time, due_time) VALUES ('{$this->getName()}', '{$this->getDescription()}', '{$this->getAssignTime()}', '{$this->getDueTime()}'); ");
+          $executed = $GLOBALS['DB']->exec("INSERT INTO tasks (task_name, task_description, assign_time) VALUES ('{$this->getName()}', '{$this->getDescription()}', CURDATE());");
           if($executed){
             $this->id = $GLOBALS['DB']->lastInsertId();
             return true;
           }else{
-          return false;
+            return false;
+          }
       }
-    }
 
       function updateAll($new_name, $new_description, $new_assign_time, $new_due_time)
       {
@@ -90,13 +90,16 @@
         }
       }
 
-      static function getAll()
+      static function getAllByGroupId($group_id)
       {
         $tasks = array();
-        $returned_tasks = $GLOBALS['DB']->query('SELECT * FROM tasks;');
-        foreach($returned_tasks as $task)
+        $returned_tasks = $GLOBALS['DB']->prepare("SELECT tasks.* FROM tasks JOIN tasks_groups ON (tasks_groups.task_id = tasks.id) JOIN task_forces ON (tasks_groups.group_id = task_forces.id) WHERE task_forces.id = :group_id;");
+        $returned_tasks->bindParam(':group_id', $group_id, PDO::PARAM_INT);
+        $returned_tasks->execute();
+        $results = $returned_tasks->fetchAll(PDO::FETCH_ASSOC);
+        foreach($results as $result)
         {
-          $newTask = new Task($task['task_name'], $task['task_description'],  $task['assign_time'], $task['due_time'], $task['id']);
+          $newTask = new Task($result['task_name'], $result['task_description'],  $result['assign_time'], $result['due_time'], $result['id']);
           array_push($tasks, $newTask);
         }
         return $tasks;
@@ -146,9 +149,11 @@
         }
         $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE task_id = {$this->getId()};");
       }
-      function addGroupToTask($group)
+      function addGroupToTask($group_id)
       {
-        $executed = $GLOBALS['DB']->exec("INSERT INTO tasks_groups (task_id, group_id) VALUES ({$this->getId()}, {$group->getId()});");
+        $executed = $GLOBALS['DB']->prepare("INSERT INTO tasks_groups (task_id, group_id) VALUES ({$this->getId()}, :group_id);");
+        $executed->bindParam(':group_id', $group_id, PDO::PARAM_INT);
+        $executed->execute();
         if ($executed){
           return true;
         }else {
