@@ -133,9 +133,6 @@
         $tasks = Task::getAllByGroupId($_POST['group_id']);
         return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks));
       }
-    } else {
-      $tasks = Task::getAllByGroupId($_POST['group_id']);
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'', 'tasks'=>$tasks));
     }
   });
 

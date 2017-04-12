@@ -12,6 +12,15 @@
   </div>
 </nav>
 {% include 'search.html.twig' %}
+
+<form action="/sendFriendRequest" method="post">
+  <input type="hidden" name="sender_id" value="{{ admin_id }}">
+  <input type="hidden" name="receiver_id" value="{{ user_id }}">
+  <label for="user">User Name:</label>
+  <input type="text" name="user">
+  <button type="submit">Invite</button>
+</form>
+
 <div class="side-notifications">
   <ul class="collapsible" data-collapsible="accordion">
 
