@@ -240,7 +240,7 @@
     }
     function addFriend($friend)
     {
-        $executed = $GLOBALS['DB']->exec("INSERT INTO friends (friend_one, friend_two) VALUES ({$this->getId()}, {$friend->getId()});");
+        $executed = $GLOBALS['DB']->exec("INSERT INTO friends (friend_one, friend_two) VALUES ({$this->getId()}, {$friend});");
         if($executed){
           return true;
         }else{
