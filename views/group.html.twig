@@ -25,8 +25,44 @@
   {% endif %}
 {% endif %}
 
-{% if tasks is not empty %}
-  {% for task in tasks %}
-    <li>{{ task.getName }}</li>
+{% if user.getId == admin_id %}
+  {% if tasks is not empty %}
+    <h4>Unsigned Tasks:</h4>
+    {% for task in tasks %}
+      <li><a href="/task/{{ task.getId }}">{{ task.getName }}</a></li>
+      <form action="/assignuser" method="post">
+        <input type="hidden" name="user_id" value="{{ user.getId }}">
+        <input type="hidden" name="task_id" value="{{ task.getId }}">
+        <input type="hidden" name="group_id" value="{{ group_id }}">
+        <label for="username">Enter username:</label>
+        <input type="text" name="username" required>
+        <label for="duetime">Enter due time:</label>
+        <input type="text" name="duetime" placeholder="YYYY-MM-DD" required>
+        <button type="submit" name="assign">Assign</button>
+      </form>
+      <form action="/deletetask" method="post">
+        <input type="hidden" name="user_id" value="{{ user.getId }}">
+        <input type="hidden" name="task_id" value="{{ task.getId }}">
+        <input type="hidden" name="group_id" value="{{ group_id }}">
+        <button type="submit">Delete</button>
+      </form>
+    {% endfor %}
+  {% endif %}
+{% endif %}
+
+{% if user.getId != admin_id %}
+  {% if unassignedtasks is not empty %}
+    <h4>unassignedtasks</h4>
+    {% for unassignedtask in unassignedtasks %}
+      <li><a href="/task/{{ unassignedtask.getId }}">{{ unassignedtask.getName }}</a></li>
+    {% endfor %}
+  {% endif %}
+{% endif %}
+
+
+{% if assignedtasks is not empty %}
+  <h4>assigned task</h4>
+  {% for assignedtask in assignedtasks %}
+    <li><a href="/task/{{ assignedtask.getId }}">{{ assignedtask.getName }}</a></li>
   {% endfor %}
 {% endif %}

@@ -1,0 +1,14 @@
+
+{% if assigned_user is not empty %}
+
+  <h4>Task {{ task.getName }} assigned by {{ assigned_user }}</h4>
+  <p>Description: {{ task.getDescription }}</p>
+  <p>Assign Time: {{ task.getAssignTime }}</p>
+  <p>Due Time: {{ task.getDueTime }}</p>
+
+{% else %}
+<h4>Task: {{ task.getName }}</h4>
+<p>Description: {{ task.getDescription }}</p>
+<p>Assign Time: {{ task.getAssignTime }}</p>
+<p>Due Time: {{ task.getDueTime }}</p>
+{% endif %}

@@ -100,7 +100,15 @@
     $admin_id = $group->groupAdminId();
     $user = User::findUserbyId($user_id);
     $tasks = Task::getAllByGroupId($group_id);
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>'', 'tasks'=>$tasks));
+    $assigned = Task::getAssignedTask($group_id);
+    foreach($assigned as $assign){
+      foreach($tasks as $key=>$value){
+        if(($assign->getName()) == ($value->getName())){
+          array_splice($tasks, $key, 1);
+        }
+      }
+    }
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>'', 'tasks'=>$tasks, 'assignedtasks'=>$assigned , 'unassignedtasks'=>$tasks));
   });
 
   $app->post("/search", function() use($app){
@@ -120,14 +128,38 @@
         $user = User::findByUserName($_POST['user']);
         $user->saveGroupRequest($_POST['group_id'], $_POST['user_id']);
         $tasks = Task::getAllByGroupId($_POST['group_id']);
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks));
+        $assigned = Task::getAssignedTask($_POST['group_id']);
+        foreach($assigned as $assign){
+          foreach($tasks as $key=>$value){
+            if(($assign->getName()) == ($value->getName())){
+              array_splice($tasks, $key, 1);
+            }
+          }
+        }
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
       } else {
         $tasks = Task::getAllByGroupId($_POST['group_id']);
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks));
+        $assigned = Task::getAssignedTask($_POST['group_id']);
+        foreach($assigned as $assign){
+          foreach($tasks as $key=>$value){
+            if(($assign->getName()) == ($value->getName())){
+              array_splice($tasks, $key, 1);
+            }
+          }
+        }
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
       }
     } else {
-      $tasks = Task::getAllByGroupId($_POST['group_id']);
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'', 'tasks'=>$tasks));
+        $tasks = Task::getAllByGroupId($_POST['group_id']);
+        $assigned = Task::getAssignedTask($_POST['group_id']);
+        foreach($assigned as $assign){
+          foreach($tasks as $key=>$value){
+            if(($assign->getName()) == ($value->getName())){
+              array_splice($tasks, $key, 1);
+            }
+          }
+        }
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
     }
   });
 
@@ -154,10 +186,75 @@
       $new_task->save();
       $new_task->addGroupToTask($_POST['group_id']);
       $tasks = Task::getAllByGroupId($_POST['group_id']);
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks));
+      $assigned = Task::getAssignedTask($_POST['group_id']);
+      foreach($assigned as $assign){
+        foreach($tasks as $key=>$value){
+          if(($assign->getName()) == ($value->getName())){
+            array_splice($tasks, $key, 1);
+          }
+        }
+      }
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
     }
   });
 
+  $app->get("/task/{task_id}", function ($task_id) use ($app) {
+    $task = Task::findTask($task_id);
+    $assigned_user = $task->assignedUser();
+    return $app['twig']->render("task.html.twig", array('task'=>$task, 'assigned_user'=>$assigned_user));
+  });
+
+  $app->post("/assignuser", function () use ($app) {
+    if(isset($_POST['assign'])){
+      $group = Group::find($_POST['group_id']);
+      $user_name_in_group_array = $group->findAllUsersInTheGroup();
+      if(in_array($_POST['username'], $user_name_in_group_array)){
+        $admin_id = $group->groupAdminId();
+        $user = User::findByUserName($_POST['username']);
+        $user->addTask($_POST['task_id']);
+        $task = Task::findTask($_POST['task_id']);
+        $task->updateDue($_POST['duetime']);
+        $tasks = Task::getAllByGroupId($_POST['group_id']);
+        $assigned = Task::getAssignedTask($_POST['group_id']);
+        foreach($assigned as $assign){
+          foreach($tasks as $key=>$value){
+            if(($assign->getName()) == ($value->getName())){
+              array_splice($tasks, $key, 1);
+            }
+          }
+        }
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
+      } else {
+        $admin_id = $group->groupAdminId();
+        $tasks = Task::getAllByGroupId($_POST['group_id']);
+        $assigned = Task::getAssignedTask($_POST['group_id']);
+        foreach($assigned as $assign){
+          foreach($tasks as $key=>$value){
+            if(($assign->getName()) == ($value->getName())){
+              array_splice($tasks, $key, 1);
+            }
+          }
+        }
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
+      }
+    }
+  });
+
+  $app->post("/deletetask", function () use ($app) {
+    $group = Group::find($_POST['group_id']);
+    $task = Task::findTask($_POST['task_id']);
+    $task->delete();
+    $tasks = Task::getAllByGroupId($_POST['group_id']);
+    $assigned = Task::getAssignedTask($_POST['group_id']);
+    foreach($assigned as $assign){
+      foreach($tasks as $key=>$value){
+        if(($assign->getName()) == ($value->getName())){
+          array_splice($tasks, $key, 1);
+        }
+      }
+    }
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks));
+  });
 
   return $app;
  ?>

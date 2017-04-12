@@ -144,10 +144,13 @@
       function delete()
       {
         $executed = $GLOBALS['DB']->exec("DELETE FROM tasks WHERE id = {$this->getId()};");
+        $executed = $GLOBALS['DB']->exec("DELETE FROM tasks_groups WHERE task_id = {$this->getId()};");
+        $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE task_id = {$this->getId()};");
         if (!$executed) {
           return false;
+        } else {
+          return true;
         }
-        $executed = $GLOBALS['DB']->exec("DELETE FROM users_tasks WHERE task_id = {$this->getId()};");
       }
       function addGroupToTask($group_id)
       {
@@ -168,6 +171,46 @@
           return $newGroup;
         }
       }
+
+      static function findTask($id){
+        $executed = $GLOBALS['DB']->prepare("SELECT * FROM tasks WHERE id = :id;");
+        $executed->bindParam(':id', $id, PDO::PARAM_INT);
+        $executed->execute();
+        $result = $executed->fetch(PDO::FETCH_ASSOC);
+        $new_task = new Task($result['task_name'], $result['task_description'], $result['assign_time'], $result['due_time'], $result['id']);
+        return $new_task;
+      }
+
+      function updateDue($due_time){
+        $executed = $GLOBALS['DB']->prepare("UPDATE tasks SET due_time = :due_time WHERE id = {$this->getId()};");
+        $executed->bindParam(':due_time', $due_time, PDO::PARAM_STR);
+        $executed->execute();
+        if($executed){
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      static function getAssignedTask($group_id){
+        $assigned_task_array = array();
+        $executed = $GLOBALS['DB']->prepare("SELECT tasks.* FROM tasks JOIN users_tasks ON (users_tasks.task_id = tasks.id) JOIN tasks_groups ON (tasks_groups.task_id = users_tasks.task_id) WHERE tasks_groups.group_id = :group_id;");
+        $executed->bindParam(':group_id', $group_id, PDO::PARAM_INT);
+        $executed->execute();
+        $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+        foreach($results as $result){
+          $task = new Task($result['task_name'], $result['task_description'], $result['assign_time'], $result['due_time'], $result['id']);
+          array_push($assigned_task_array, $task);
+        }
+        return $assigned_task_array;
+      }
+
+      function assignedUser(){
+        $executed = $GLOBALS['DB']->query("SELECT CONCAT(first_name,' ',last_name) AS assigned_user FROM profiles JOIN users_profiles ON (users_profiles.profile_id = profiles.id) JOIN users ON (users.id = users_profiles.user_id) JOIN users_tasks ON (users_tasks.user_id = users.id) JOIN tasks ON (users_tasks.task_id = tasks.id) WHERE users_tasks.task_id = {$this->getId()};");
+        $username = $executed->fetch(PDO::FETCH_ASSOC);
+        return $username['assigned_user'];
+      }
+
     }
 
  ?>
