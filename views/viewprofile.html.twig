@@ -8,7 +8,6 @@
         <li><a href="#">My Tasks</a></li>
         <li><a href="/homepage/{{ id }}">My Profile</a></li>
       </ul>
-
       </ul>
     </div>
   </div>
@@ -16,7 +15,7 @@
 
 
 <form action="/sendFriendRequest" method="post">
-  <input type="hidden" name="sender_id" value="{{ admin_id }}">
+  <input type="hidden" name="sender_id" value="{{ id }}">
   <input type="hidden" name="receiver_id" value="{{ user_id }}">
   <label for="user">User Name:</label>
   <input type="text" name="user">
