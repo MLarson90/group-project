@@ -19,6 +19,10 @@
   $app->get("/", function() use ($app) {
     return $app['twig']->render('index.html.twig', array('msg'=>''));
   });
+
+  $app->get("/profile/{id}", function($id) use ($app) {
+    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>''));
+  });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
@@ -44,8 +48,12 @@
     $groups = $user->getGroup();
     return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
-  $app->post("/viewprofile/{id}", function($id) use ($app) {
-    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile, 'user_id'=>$id ));
+  $app->post("/viewprofile/{first_name}/{profile_id}/{id}", function($first_name, $profile_id, $id) use ($app) {
+    $profile = Profile::findProfile($profile_id);
+    $user = Profile::findUserbyProfileId($profile_id);
+    $user_id = $user->getId();
+    $groups = $user->getGroup();
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->get("/homepage/{id}", function($id) use($app){
     $user = User::findUserbyId($id);
