@@ -21,7 +21,7 @@
       {% set tasks = group.getTaskFromGroup %}
     <li>
       <div class="collapsible-header"><span class="new badge">
-      1</span><i class="material-icons"></i>{{ group.getGroupName }}</div>
+      1</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
       <div class="collapsible-body">
         {% for task in tasks %}
         <p>{{task.getName}}</p></br>
@@ -35,22 +35,31 @@
 
   <img src="{{ profile.getPicture }}" height="100" width="100">
 
-  <p>{{ profile.getFirstName }}</p>
-  {{ profile.getLastName }}
-  {{ profile.getBio }}
-  {{ profile.getDate }}
+  <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
+  <p>Memeber since {{ profile.getDate }}</p>
+  <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
+
 
 
   {% include 'creategroup.html.twig' %}
 
-{% if groups is not empty %}
-  {% for group in groups %}
-    <li><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></li>
-  {% endfor %}
-{% endif %}
+  {% if group_requests is not empty %}
+    {% for group_request in group_requests %}
+      <form action="/groupaccept" method="post">
+        <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
+        <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
+        <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
+        <p>You are invited to group: {{ group_request.group_name }}</p>
+        <button type="submit">Accept</button>
+      </form>
+      <form action="/grouprefuse" method="post">
+        <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
+        <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
+        <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
+        <button type="submit">Refuse</button>
+      </form>
+    {% endfor %}
+  {% endif %}
 
-
-
-</div>
 
 {% include 'bottom.html.twig' %}

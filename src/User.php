@@ -209,6 +209,36 @@
         return $result['id'];
       }
 
+      function saveGroupRequest($group_id, $sender_id){
+        $executed = $GLOBALS['DB']->prepare("INSERT INTO group_requests (group_id, user_id, sender_id) VALUES (:group_id, {$this->getId()}, :sender_id);");
+        $executed->bindParam(':group_id', $group_id, PDO::PARAM_INT);
+        $executed->bindParam(':sender_id', $sender_id, PDO::PARAM_INT);
+        $executed->execute();
+        if($executed){
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      function findGroupRequest(){
+        $executed = $GLOBALS['DB']->query("SELECT users.id AS user_id, task_forces.id AS group_id, username, group_name, sender_id FROM users JOIN group_requests ON (group_requests.user_id = users.id) JOIN task_forces ON (group_requests.group_id = task_forces.id) WHERE users.id = {$this->getId()};");
+        $result = $executed->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+      }
+
+    function deleteGroupRequest($group_id, $sender_id){
+      $executed = $GLOBALS['DB']->prepare("DELETE FROM group_requests WHERE user_id = {$this->getId()} AND group_id = :group_id AND sender_id = :sender_id;");
+      $executed->bindParam(':group_id', $group_id, PDO::PARAM_INT);
+      $executed->bindParam(':sender_id', $sender_id, PDO::PARAM_INT);
+      $executed->execute();
+      if(!$executed){
+        return false;
+      } else {
+        return true;
+      }
+    }
+
   }
 
 

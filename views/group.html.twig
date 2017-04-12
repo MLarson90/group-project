@@ -1,5 +1,15 @@
 {% if user.getId == admin_id %}
 
-  <button>Edit</button>
+  <form action="/sendinvite" method="post">
+    <input type="hidden" name="user_id" value="{{ user.getId }}">
+    <input type="hidden" name="admin_id" value="{{ admin_id }}">
+    <input type="hidden" name="group_id" value="{{ group_id }}">
+    <label for="user">User Name:</label>
+    <input type="text" name="user">
+    <button type="submit">Invite</button>
+  </form>
 
+  {% if msg is not empty %}
+    {{ msg }}
+  {% endif %}
 {% endif %}
