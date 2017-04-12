@@ -7,6 +7,8 @@
 
   use Symfony\Component\Debug\Debug;
   Debug::enable();
+  use Symfony\Component\HttpFoundation\Request;
+Request::enableHttpMethodParameterOverride();
 
   $app = new Silex\Application();
   $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
@@ -21,7 +23,8 @@
   });
 
   $app->get("/profile/{id}", function($id) use ($app) {
-    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>''));
+    $profile = Profile::getProfileUsingId($id);
+    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>'', 'profile'=>$profile));
   });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
@@ -177,6 +180,15 @@
       $tasks = Task::getAllByGroupId($_POST['group_id']);
       return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks));
     }
+  });
+  $app->patch("/edit_homepage/{id}", function($id) use($app){
+    $user = User::findUserbyId($id);
+    $profile = Profile::getProfileUsingId($id);
+    $profile_pic = $profile->getPicture();
+    var_dump($profile->getPicture());
+    $new_profile = $profile->updateProfile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
+    var_dump($_POST['profile_pic']);
+    return $app['twig']->render('homepage.html.twig', array('profile'=>$new_profile));
   });
 
 

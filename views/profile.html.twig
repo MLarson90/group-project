@@ -7,7 +7,7 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="#">My Groups</a></li>
         <li><a href="#">My Tasks</a></li>
-        <li><a href="/profile/{{ user_id }}">My Profile</a></li>
+        <li><a href="/homepage/{{ user_id }}">My Profile</a></li>
       </ul>
     </div>
   </div>
@@ -16,22 +16,26 @@
 <div class="container">
   <div class="input-area">
     <h5>Use the fields below to edit your profile</h5>
-    <form action="/homepage" method="post" enctype="multipart/form-data">
+    <form action="/edit_homepage/{{ user_id }}" method="post" enctype="multipart/form-data">
       <div class="input-field col m4">
+        <input type="hidden" name="_method" value="patch">
         <label for="first_name">Enter your first name</label>
-        <input type="text" name="first_name">
+        <input type="text" name="first_name" value="{{ profile.getFirstName }}" placeholder="{{ profile.getFirstName }}">
       </div>
       <div class="input-field col m4">
+        <input type="hidden" name="_method" value="patch">
         <label for="last_name">Enter your last name</label>
-        <input type="text" name="last_name">
+        <input type="text" name="last_name" value="{{ profile.getLastName }}" placeholder="{{ profile.getLastName }}">
       </div>
       <div class="input-field col m4">
+        <input type="hidden" name="_method" value="patch">
         <label for="profile_pic">Enter the <strong>URL</strong> for your profile picture</label>
-        <input type="text" name="profile_pic">
+        <input type="text" name="profile_pic" value="{{ profile.getPicture }}" placeholder="{{ profile.getPicture }}">
       </div>
       <div class="input-field col m4">
+        <input type="hidden" name="_method" value="patch">
         <label for="bio">Enter a bio</label>
-        <textarea class="materialize-textarea" type="text" name="bio" rows="5"></textarea>
+        <textarea class="materialize-textarea" type="text" name="bio" rows="5" value="{{ profile.getBio }}" placeholder="{{ profile.getBio }}"></textarea>
       </div>
       <input type="hidden" name="user_id" value="{{ user_id }}">
       <button type="submit" class="btn cyan waves-effect waves-light" name="button">Submit your profile</button>
