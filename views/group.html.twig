@@ -9,7 +9,24 @@
     <button type="submit">Invite</button>
   </form>
 
+  <form action="/createtask" method="post">
+    <input type="hidden" name="user_id" value="{{ user.getId }}">
+    <input type="hidden" name="admin_id" value="{{ admin_id }}">
+    <input type="hidden" name="group_id" value="{{ group_id }}">
+    <label for="task">Enter a task:</label>
+    <input type="text" name="task" required>
+    <label for="description">Description:</label>
+    <textarea class="materialize-textarea" type="text" name="description" rows="5" required></textarea>
+    <button type="submit" name="createtask">Create</button>
+  </form>
+
   {% if msg is not empty %}
     {{ msg }}
   {% endif %}
+{% endif %}
+
+{% if tasks is not empty %}
+  {% for task in tasks %}
+    <li>{{ task.getName }}</li>
+  {% endfor %}
 {% endif %}
