@@ -127,9 +127,11 @@
         }
       }
 
-      function addTask($task)
+      function addTask($task_id)
       {
-        $executed = $GLOBALS['DB']->exec("INSERT INTO users_tasks (user_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
+        $executed = $GLOBALS['DB']->prepare("INSERT INTO users_tasks (user_id, task_id) VALUES ({$this->getId()}, :task_id);");
+        $executed->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+        $executed->execute();
         if($executed){
           return true;
         }else{

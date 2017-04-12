@@ -1,19 +1,33 @@
 {% include 'top.html.twig' %}
 
 <div class = "container">
+
 <div class = "row">
   <div class = "col m12">
-    <img src="{{ profile.getPicture }}" height="100" width="100">
-
-    <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
-    <p>Member since {{ profile.getDate }}</p>
-    <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
-    <a href="/profile/{{ user_id }}">Edit  Profile</a>
+    <div class = "myprofile">
+      <h2 class="header">{{ profile.getFirstName }} {{ profile.getLastName }}</h2>
+      <div class="card horizontal">
+        <div class="card-image">
+          <img src="{{ profile.getPicture }}" height="160" width="160">
+        </div>
+        <div class="card-stacked">
+          <div class="card-content">
+            <p>Joined <span class = "brand">everydone</span> on {{ profile.getDate }}</p>
+            <p>{{ profile.getBio }}</p>
+          </div>
+          <div class="linkbackground">
+            <div class="card-action">
+              <a href="/profile/{{ user_id }}">Edit Profile</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
   <div class = "row">
     <div class = "col m6">
-      <h5>My Groups</h5>
+      <h5 class = "homepage">My Groups</h5>
         <ul class="collapsible" data-collapsible="accordion">
           {% for group in groups %}
             {% set tasks = group.getTaskFromGroup %}
@@ -30,7 +44,7 @@
         </ul>
     </div>
     <div class = "col m6">
-      <h5>My Tasks</h5>
+      <h5 class = "homepage">My Tasks</h5>
       Place tasks here
     </div>
   </div>
@@ -71,13 +85,6 @@
     {% endif %}
 
 
-  
-
-
-
-  {% include 'creategroup.html.twig' %}
-
-
   {% if friends is not empty %}
 <h3> My associates </h3>
 {% for friend in friends %}
@@ -88,6 +95,7 @@
   {% endif %}
 
 </div>
+
 {% include 'sidenav.html.twig' %}
 
 {% include 'bottom.html.twig' %}
