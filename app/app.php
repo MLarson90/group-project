@@ -37,15 +37,22 @@
     }
   });
 
-  $app->get("/viewprofile/{id}", function($id) use ($app) {
-    $profile = Profile::findProfile($id);
-    $user = Profile::findUserbyProfileId($id);
+  $app->get("/viewprofile/{first_name}/{profile_id}/{id}", function($first_name, $profile_id, $id) use ($app) {
+    $profile = Profile::findProfile($profile_id);
+    $user = Profile::findUserbyProfileId($profile_id);
     $user_id = $user->getId();
     $groups = $user->getGroup();
-    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$id, 'user_id'=>$user_id, 'groups' => $groups ));
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->post("/viewprofile/{id}", function($id) use ($app) {
     return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile, 'user_id'=>$id ));
+  });
+  $app->get("/homepage/{id}", function($id) use($app){
+    $user = User::findUserbyId($id);
+    $user_id = $user->getId();
+    $groups = $user->getGroup();
+    $group_requests = $user->findGroupRequest();
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($id), 'user'=>$user, 'groups'=>$groups,'user_id'=>$user_id, 'group_requests'=>$group_requests));
   });
 
   $app->post("/homepage", function() use ($app) {
@@ -112,12 +119,13 @@
 
   $app->post("/search/{id}", function($id) use($app){
       $user = User::findUserbyId($id);
+      $user_id = $user->getId();
       $search = '%'.$_POST['searchName'].'%';
       $results = Profile::search($search);
       if($_POST['searchName'] != null){
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>'', 'user'=>$user));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>'', 'user_id'=>$user_id));
       } else {
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'user'=>$user, 'msg'=>'No Match!'));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'user_id'=>$user_id, 'msg'=>'No Match!'));
       }
   });
 
