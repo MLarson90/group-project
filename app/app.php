@@ -19,6 +19,10 @@
   $app->get("/", function() use ($app) {
     return $app['twig']->render('index.html.twig', array('msg'=>''));
   });
+
+  $app->get("/profile/{id}", function($id) use ($app) {
+    return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>''));
+  });
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
@@ -141,9 +145,6 @@
         $tasks = Task::getAllByGroupId($_POST['group_id']);
         return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks));
       }
-    } else {
-      $tasks = Task::getAllByGroupId($_POST['group_id']);
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'', 'tasks'=>$tasks));
     }
   });
 
