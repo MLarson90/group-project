@@ -85,17 +85,6 @@
     {% endif %}
 
 
-  <img src="{{ profile.getPicture }}" height="100" width="100">
-
-  <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
-  <p>Memeber since {{ profile.getDate }}</p>
-  <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
-
-
-
-  {% include 'creategroup.html.twig' %}
-
-
   {% if friends is not empty %}
 <h3> My associates </h3>
 {% for friend in friends %}
