@@ -1,5 +1,5 @@
 header, main, footer {
- padding-left: 300px;
+ padding-left: 200px;
 }
 
 @media only screen and (max-width : 992px) {
@@ -18,6 +18,10 @@ nav li a{
 
 body {
   color: #bdbdbd;
+}
+
+.myprofile {
+  margin-top: 80px;
 }
 
 #logo-container a {

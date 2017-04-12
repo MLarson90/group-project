@@ -3,12 +3,14 @@
 <div class = "container">
 <div class = "row">
   <div class = "col m12">
-    <img src="{{ profile.getPicture }}" height="100" width="100">
+    <div class = "myprofile">
+      <img class = "circle" src="{{ profile.getPicture }}" height="140" width="140">
 
-    <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
-    <p>Memeber since {{ profile.getDate }}</p>
-    <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
-    <a href="/profile/{{ user_id }}">Edit  Profile</a>
+      <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
+      <p>Memeber since {{ profile.getDate }}</p>
+      <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
+      <a href="/profile/{{ user_id }}">Edit  Profile</a>
+    </div>
   </div>
 </div>
   <div class = "row">
