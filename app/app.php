@@ -9,7 +9,7 @@
   Debug::enable();
 
   $app = new Silex\Application();
-  $DB = new PDO('mysql:host=localhost:8889;dbname=appdata', 'root', 'root');
+  $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
   $app['debug'] = true;
 
   $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -66,8 +66,6 @@
       $user = User::findUserbyId($user_id);
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups));
-
-      return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user'=>User::findUserbyId($user_id), 'user_id'=>$user_id, 'groups'=>''));
     }
   });
 
