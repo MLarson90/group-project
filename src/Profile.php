@@ -119,10 +119,6 @@
           $executed->execute();
           if ($executed)
           {
-            $this->setFirstName($new_first_name);
-            $this->setLastName($new_last_name);
-            $this->setPicture($new_pic);
-            $this->setBio($new_bio);
             return true;
           } else {
             return false;

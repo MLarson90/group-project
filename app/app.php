@@ -236,10 +236,13 @@ Request::enableHttpMethodParameterOverride();
     $user = User::findUserbyId($id);
     $profile = Profile::getProfileUsingId($id);
     $profile_pic = $profile->getPicture();
-    var_dump($profile->getPicture());
     $new_profile = $profile->updateProfile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
-    var_dump($_POST['profile_pic']);
-    return $app['twig']->render('homepage.html.twig', array('profile'=>$new_profile));
+    $profile = Profile::getProfileUsingId($id);
+    $groups = $user->getGroup();
+    $group_requests = $user->findGroupRequest();
+    $user_request = $user->findFriendRequest();
+    $friends = $user->findAllFriends();
+    return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user_id'=>$id, 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request, 'friends'=>$friends, 'user'=>$user));
   });
 
   $app->get("/task/{task_id}", function ($task_id) use ($app) {
