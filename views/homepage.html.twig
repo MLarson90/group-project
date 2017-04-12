@@ -12,54 +12,50 @@
   </div>
 </nav>
 
-{% include 'search.html.twig' %}
 
-<div class="side-notifications">
-  <ul class="collapsible" data-collapsible="accordion">
+<div class = "container">
 
-    {% for group in groups %}
-      {% set tasks = group.getTaskFromGroup %}
-    <li>
-      <div class="collapsible-header"><span class="new badge">
-      1</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
-      <div class="collapsible-body">
-        {% for task in tasks %}
-        <p>{{task.getName}}</p></br>
+    <img src="{{ profile.getPicture }}" height="100" width="100">
+
+    <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
+    <p>Memeber since {{ profile.getDate }}</p>
+    <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
+
+    <div class="side-notifications">
+      <ul class="collapsible" data-collapsible="accordion">
+
+        {% for group in groups %}
+          {% set tasks = group.getTaskFromGroup %}
+        <li>
+          <div class="collapsible-header"><span class="new badge cyan " data-badge-caption="tasks">
+          {{tasks|length}}</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
+          <div class="collapsible-body">
+            {% for task in tasks %}
+            <p>{{task.getName}}- Due: {{task.getDueTime}}</p></br>
+            {% endfor %}
+          </div>
+        </li>
         {% endfor %}
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
+      </ul>
+    </div>
+
+    {% if group_requests is not empty %}
+      {% for group_request in group_requests %}
+        <form action="/groupaccept" method="post">
+          <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
+          <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
+          <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
+          <p>You are invited to group: {{ group_request.group_name }}</p>
+          <button type="submit">Accept</button>
+        </form>
+        <form action="/grouprefuse" method="post">
+          <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
+          <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
+          <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
+          <button type="submit">Refuse</button>
+        </form>
+      {% endfor %}
+    {% endif %}
 </div>
-
-
-  <img src="{{ profile.getPicture }}" height="100" width="100">
-
-  <p>Welcome {{ profile.getFirstName }} {{ profile.getLastName }}</p>
-  <p>Memeber since {{ profile.getDate }}</p>
-  <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
-
-
-
-  {% include 'creategroup.html.twig' %}
-
-  {% if group_requests is not empty %}
-    {% for group_request in group_requests %}
-      <form action="/groupaccept" method="post">
-        <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
-        <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
-        <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
-        <p>You are invited to group: {{ group_request.group_name }}</p>
-        <button type="submit">Accept</button>
-      </form>
-      <form action="/grouprefuse" method="post">
-        <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
-        <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
-        <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
-        <button type="submit">Refuse</button>
-      </form>
-    {% endfor %}
-  {% endif %}
-
-
+{% include 'sidenav.html.twig' %}
 {% include 'bottom.html.twig' %}
