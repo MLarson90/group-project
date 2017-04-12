@@ -1,0 +1,51 @@
+{% include 'top.html.twig' %}
+<nav>
+  <div class="nav-wrapper">
+    <div class="container">
+      <a href="/" class="brand-logo center">everydone</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="#">My Groups</a></li>
+        <li><a href="#">My Tasks</a></li>
+        <li><a href="/homepage/{{ id }}">My Profile</a></li>
+      </ul>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<form action="/sendFriendRequest" method="post">
+  <input type="hidden" name="sender_id" value="{{ id }}">
+  <input type="hidden" name="receiver_id" value="{{ user_id }}">
+  <button type="submit">Add Associate</button>
+</form>
+
+
+<div class="side-notifications">
+  <ul class="collapsible" data-collapsible="accordion">
+
+    {% for group in groups %}
+      {% set tasks = group.getTaskFromGroup %}
+    <li>
+      <div class="collapsible-header"><span class="badge">
+      {{ tasks|length }}</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
+      <div class="collapsible-body">
+        {% for task in tasks %}
+        <p>{{task.getName}}</p></br>
+        {% endfor %}
+      </div>
+    </li>
+    {% endfor %}
+
+
+  </ul>
+</div>
+
+
+  <img src="{{ profile.getPicture }}" height="100" width="100">
+
+  <p>{{ profile.getFirstName }} {{ profile.getLastName }}</p>
+  <p>Member since: {{ profile.getDate }}</p>
+  <p>About {{ profile.getFirstName }}: {{ profile.getBio }}</p>
+
+{% include 'bottom.html.twig' %}
