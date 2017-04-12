@@ -42,7 +42,7 @@
     $user = Profile::findUserbyProfileId($profile_id);
     $user_id = $user->getId();
     $groups = $user->getGroup();
-    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->post("/viewprofile/{id}", function($id) use ($app) {
     return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile, 'user_id'=>$id ));
