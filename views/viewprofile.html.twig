@@ -12,12 +12,13 @@
     </div>
   </div>
 </nav>
+{% if friends == false %}
 <form action="/sendFriendRequest" method="post">
   <input type="hidden" name="sender_id" value="{{ id }}">
   <input type="hidden" name="receiver_id" value="{{ user_id }}">
   <button type="submit">Add Associate</button>
 </form>
-
+{% endif %}
 
 <div class="side-notifications">
   <ul class="collapsible" data-collapsible="accordion">
