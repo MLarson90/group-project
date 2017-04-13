@@ -19,6 +19,29 @@ header, main, footer {
   margin-bottom: 60px;
 }
 
+.logo-thing img{
+  margin-top: 40px;
+  margin-left: 50px;
+}
+
+.simple {
+  background: transparent;
+  border: 0px;
+  color: #03a9f4;
+}
+
+.butlink {
+  font-size: 20px;
+  background: #fff;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+}
+
+.assigntask {
+  margin-top: 10px;
+}
+
 nav {
   background: #fff;
 }

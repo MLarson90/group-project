@@ -45,43 +45,50 @@
   {% endif %}
 {% endif %}
 
-<div class = "row">
-  <div class = "col m12">
-    <div class = "section">
+
       {% if user.getId == admin_id %}
         {% if tasks is not empty %}
           <h4>Unassigned Tasks:</h4>
           {% for task in tasks %}
-            <li><a href="/task/{{ task.getId }}">{{ task.getName }}</a></li>
-            <form action="/assignuser" method="post">
-              <input type="hidden" name="user_id" value="{{ user.getId }}">
-              <input type="hidden" name="task_id" value="{{ task.getId }}">
-              <input type="hidden" name="group_id" value="{{ group_id }}">
-              <label for="username">Enter username:</label>
-              <input type="text" name="username" required>
-              <label for="duetime">Enter due time:</label>
-              <input type="text" name="duetime" placeholder="YYYY-MM-DD" required>
-              <button class="btn cyan waves-effect waves-light" type="submit" name="assign">Assign</button>
-            </form>
-            <form action="/deletetask" method="post">
-              <input type="hidden" name="user_id" value="{{ user.getId }}">
-              <input type="hidden" name="task_id" value="{{ task.getId }}">
-              <input type="hidden" name="group_id" value="{{ group_id }}">
-              <button class="btn cyan waves-effect waves-light deletebutton" type="submit">Delete</button>
-            </form>
-          {% endfor %}
-        {% endif %}
-      {% endif %}
-    </div>
-  </div>
-</div>
+          <div class = "row">
+            <div class = "col m12">
+              <div class = "section">
+                <form  name="user_id" method="post" action="/task/{{task.getId}}">
+                  <input type="hidden" name="user_id" value="{{ user.getId }}">
+                  <div class="butlink"> Task: <button class="simple" type="submit" name="assign">{{ task.getName }}</button></div>
+                </form>
+                <h6 class= "assigntask">Assign this Task to a User</h6>
+                <form action="/assignuser" method="post">
+                  <input type="hidden" name="user_id" value="{{ user.getId }}">
+                  <input type="hidden" name="task_id" value="{{ task.getId }}">
+                  <input type="hidden" name="group_id" value="{{ group_id }}">
+                  <label for="username">Enter username:</label>
+                  <input type="text" name="username" required>
+                  <label for="duetime">Enter due time:</label>
+                  <input type="text" name="duetime" placeholder="YYYY-MM-DD" required>
+                  <button class="btn cyan waves-effect waves-light" type="submit" name="assign">Assign</button>
+              </form>
+              <form action="/deletetask" method="post">
+                <input type="hidden" name="user_id" value="{{ user.getId }}">
+                <input type="hidden" name="task_id" value="{{ task.getId }}">
+                <input type="hidden" name="group_id" value="{{ group_id }}">
+                <button class="btn cyan waves-effect waves-light deletebutton" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endif %}
 
-<div class = "row">
-  <div class = "col m12 section">
+
+
     {% if user.getId != admin_id %}
       {% if unassignedtasks is not empty %}
-        <h4>Unassigned Tasks</h4>
-        {% for unassignedtask in unassignedtasks %}
+      <div class = "row">
+        <div class = "col m12 section">
+          <h4>Unassigned Tasks</h4>
+          {% for unassignedtask in unassignedtasks %}
           <li><a href="/task/{{ unassignedtask.getId }}">{{ unassignedtask.getName }}</a></li>
         {% endfor %}
       {% endif %}
@@ -89,9 +96,10 @@
   </div>
 </div>
 
-<div class = "row">
-  <div class = "col m12 section">
-    {% if assignedtasks is not empty %}
+
+  {% if assignedtasks is not empty %}
+    <div class = "row">
+      <div class = "col m12 section">
       <h4>Assigned Task</h4>
       {% for assignedtask in assignedtasks %}
         <li><a href="/task/{{ assignedtask.getId }}">{{ assignedtask.getName }}</a></li>
