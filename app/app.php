@@ -41,7 +41,6 @@
       return $app['twig']->render('create_profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } else {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'Passwords need to match.'));
     }
@@ -63,7 +62,7 @@
   });
   $app->get("/homepage/{id}", function($id) use($app){
     $user = User::findUserbyId($id);
-    $user_id = $user->getId();
+    $user_id = $id;
     $groups = $user->getGroup();
     $group_requests = $user->findGroupRequest();
     $user_request = $user->findFriendRequest();
@@ -193,8 +192,8 @@
   });
 
 
-  $app->post("/search/{id}", function($id) use($app){
-      $user = User::findUserbyId($id);
+  $app->post("/search", function() use($app){
+      $user = User::findUserbyId($_POST['user_id']);
       $user_id = $user->getId();
       $search = '%'.$_POST['searchName'].'%';
       $results = Profile::search($search);
@@ -221,7 +220,7 @@
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       } else {
         $tasks = Task::getAllByGroupId($_POST['group_id']);
         $assigned = Task::getAssignedTask($_POST['group_id']);
@@ -232,7 +231,7 @@
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$POST['user_id']));
       }
     }
   });
@@ -281,7 +280,7 @@
           }
         }
       }
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
     }
   });
   $app->patch("/edit_homepage/{id}", function($id) use($app){
@@ -322,7 +321,7 @@
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       } else {
         $admin_id = $group->groupAdminId();
         $tasks = Task::getAllByGroupId($_POST['group_id']);
@@ -334,7 +333,7 @@
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       }
     }
   });
@@ -378,7 +377,7 @@
         }
       }
     }
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
   });
 
   return $app;
