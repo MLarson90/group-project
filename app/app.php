@@ -192,7 +192,7 @@
   });
 
 
-  $app->post("/search", function() use($app){
+  $app->post("/search/{id}", function($id) use($app){
       $user = User::findUserbyId($_POST['user_id']);
       $user_id = $user->getId();
       $search = '%'.$_POST['searchName'].'%';
