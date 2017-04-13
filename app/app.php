@@ -27,9 +27,11 @@ Request::enableHttpMethodParameterOverride();
     $profile = Profile::getProfileUsingId($id);
     return $app['twig']->render('profile.html.twig', array('user_id' => $id, 'msg'=>'', 'user' => $user, 'profile' => $profile));
   });
+
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
+  
   $app->post("/create_account", function() use ($app) {
     $username = User::usernameArray();
     if (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 0))
