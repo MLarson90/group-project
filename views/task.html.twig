@@ -1,14 +1,23 @@
+{% include 'top.html.twig' %}
 
-{% if assigned_user is not empty %}
+<div class = "container">
+  <div class = "row">
+    {% if assigned_user is not empty %}
+    <div class = "col m12 section">
+      <h4>Task {{ task.getName }} assigned to {{ assigned_user }}</h4>
+      <p>Description: {{ task.getDescription }}</p>
+      <p>Assign Time: {{ task.getAssignTime }}</p>
+      <p>Due Time: {{ task.getDueTime }}</p>
+    </div>
+    {% else %}
+    <div class = "col m12 section">
+      <h4>Task: {{ task.getName }}</h4>
+      <p>Description: {{ task.getDescription }}</p>
+      <p>Assign Time: {{ task.getAssignTime }}</p>
+      <p>Due Time: {{ task.getDueTime }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
 
-  <h4>Task {{ task.getName }} assigned to {{ assigned_user }}</h4>
-  <p>Description: {{ task.getDescription }}</p>
-  <p>Assign Time: {{ task.getAssignTime }}</p>
-  <p>Due Time: {{ task.getDueTime }}</p>
-
-{% else %}
-<h4>Task: {{ task.getName }}</h4>
-<p>Description: {{ task.getDescription }}</p>
-<p>Assign Time: {{ task.getAssignTime }}</p>
-<p>Due Time: {{ task.getDueTime }}</p>
-{% endif %}
+{% include 'bottom.html.twig' %}
