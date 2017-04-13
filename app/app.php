@@ -53,20 +53,26 @@
     $user_id = $user->getId();
     $groups = $user->getGroup();
     $me = User::findUserbyId($id);
-    $friends = $me->findAllFriends();
-    $friend = $me->findAllOtherFriends();
+    $friends = $me->findAllFriendsId();
+    $friend = $me->findAllOtherFriendsId();
     foreach($friend as $afriend){
       array_push($friends, $afriend);
-    }
-    var_dump($friends);
-    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
+    };
+    $inArray = in_array($profile_id, $friends);
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id,'friends'=> $inArray, 'groups' => $groups, 'id'=>$id));
   });
   $app->post("/viewprofile/{first_name}/{profile_id}/{id}", function($first_name, $profile_id, $id) use ($app) {
     $profile = Profile::findProfile($profile_id);
     $user = Profile::findUserbyProfileId($profile_id);
     $user_id = $user->getId();
     $groups = $user->getGroup();
-    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
+    $friends = $me->findAllFriendsId();
+    $friend = $me->findAllOtherFriendsId();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    };
+    $inArray = in_array($profile_id, $friends);
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id,'friends' =>$inArray, 'groups' => $groups, 'id'=>$id));
   });
   $app->get("/homepage/{id}", function($id) use($app){
     $user = User::findUserbyId($id);
@@ -354,7 +360,13 @@
     $groups = $receiver->getGroup();
     $id = ($_POST['sender_id']);
     $sender->saveFriendRequest($receiver->getId());
-    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$_POST['receiver_id'], 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
+    $friends = $sender->findAllFriendsId();
+    $friend = $sender->findAllOtherFriendsId();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    };
+    $inArray = in_array($_POST['receiver_id'], $friends);
+    return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$_POST['receiver_id'],'friends'=> $inArray, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->post("/friendaccept", function () use ($app) {
     $user = User::findUserbyId($_POST['receiver_id']);
