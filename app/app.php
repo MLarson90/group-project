@@ -8,7 +8,7 @@
   use Symfony\Component\Debug\Debug;
   Debug::enable();
   use Symfony\Component\HttpFoundation\Request;
-Request::enableHttpMethodParameterOverride();
+  Request::enableHttpMethodParameterOverride();
 
   $app = new Silex\Application();
   $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
@@ -31,17 +31,16 @@ Request::enableHttpMethodParameterOverride();
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
-  
+
   $app->post("/create_account", function() use ($app) {
     $username = User::usernameArray();
     if (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 0))
     {
       $new_user = new User($_POST['user_email'], $_POST['password']);
       $new_user->save();
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
+      return $app['twig']->render('create_profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } else {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'Passwords need to match.'));
     }
@@ -62,6 +61,22 @@ Request::enableHttpMethodParameterOverride();
     return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->get("/homepage/{id}", function($id) use($app){
+    $user = User::findUserbyId($id);
+    $user_id = $id;
+    $groups = $user->getGroup();
+    $group_requests = $user->findGroupRequest();
+    $user_request = $user->findFriendRequest();
+    $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($id), 'user'=>$user, 'groups'=>$groups,'user_id'=>$user_id, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
+  });
+  $app->post("/homepage/{id}", function($id) use($app){
+    $new_profile = new Profile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
+    $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
+    $new_profile->saveUsertoJoinTable($_POST['user_id']);
     $user = User::findUserbyId($id);
     $user_id = $user->getId();
     $groups = $user->getGroup();
@@ -177,8 +192,8 @@ Request::enableHttpMethodParameterOverride();
   });
 
 
-  $app->post("/search/{id}", function($id) use($app){
-      $user = User::findUserbyId($id);
+  $app->post("/search", function() use($app){
+      $user = User::findUserbyId($_POST['user_id']);
       $user_id = $user->getId();
       $search = '%'.$_POST['searchName'].'%';
       $results = Profile::search($search);
@@ -205,7 +220,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       } else {
         $tasks = Task::getAllByGroupId($_POST['group_id']);
         $assigned = Task::getAssignedTask($_POST['group_id']);
@@ -216,7 +231,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not existed!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$POST['user_id']));
       }
     }
   });
@@ -265,7 +280,7 @@ Request::enableHttpMethodParameterOverride();
           }
         }
       }
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
     }
   });
   $app->patch("/edit_homepage/{id}", function($id) use($app){
@@ -306,7 +321,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       } else {
         $admin_id = $group->groupAdminId();
         $tasks = Task::getAllByGroupId($_POST['group_id']);
@@ -318,7 +333,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       }
     }
   });
@@ -362,7 +377,7 @@ Request::enableHttpMethodParameterOverride();
         }
       }
     }
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
   });
 
   return $app;
