@@ -19,7 +19,7 @@ nav li a{
 
 
 body {
-  color: #bdbdbd;
+  color: #757575;
 }
 
 h2.header {
@@ -28,7 +28,7 @@ h2.header {
 }
 
 .myprofile {
-  margin: 50px 0;
+  margin-top: 50px;
 }
 
 .card-content p {
@@ -79,6 +79,17 @@ h2.header {
   color: #e0e0e0;
 }
 
+button.deletebutton {
+  margin-top: 14px;
+}
+
+.section {
+  background: #f5f5f5;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+
 .login-area {
   padding: 60px;
 }
@@ -90,7 +101,7 @@ h2.header {
 }
 
 .input-area {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .input-area h5 {

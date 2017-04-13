@@ -25,11 +25,12 @@
     <br>
     <button class="btn cyan waves-effect waves-light" type="submit" name="button">Go</button>
   </form>
+  <br>
+
+  {% if msg is not empty %}
+    {{ msg }}
+  {% endif %}
+
+  {% include 'bottom.html.twig' %}
+  
 </div>
-<br>
-
-{% if msg is not empty %}
-  {{ msg }}
-{% endif %}
-
-{% include 'bottom.html.twig' %}

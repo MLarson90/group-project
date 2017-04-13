@@ -1,32 +1,32 @@
 {% include 'top.html.twig' %}
+  <div class="login-area">
+    <p>Welcome to everydone, the social to-do list!</p>
+  </div>
 
-<div class="login-area">
-  <p>Welcome to everydone, the social to-do list!</p>
-</div>
+  <div class="container">
+    <form action="/login_user" method="post">
+      <div class="input-field col m4">
+        <input id="username" type="text" name="username" class="validate">
+        <label for="username" class>User Name</label>
+        <br>
+      </div>
 
-<div class="container">
-  <form action="/login_user" method="post">
-    <div class="input-field col m4">
-      <input id="username" type="text" name="username" class="validate">
-      <label for="username" class>User Name</label>
+      <div class="input-field col m4">
+        <input id="userpassword" type="password" name="userpassword" class="validate">
+        <label for="userpassword">Password</label>
+      </div>
+
       <br>
-    </div>
+      <button class="btn cyan waves-effect waves-light" type="submit" name="button">Log In</button>
+    </form>
+      <br>
+    <form action="/create_user" method="post">
+      <button class="btn amber waves-effect waves-light" type="submit" name="button">Create Account</button>
+    </form>
 
-    <div class="input-field col m4">
-      <input id="userpassword" type="password" name="userpassword" class="validate">
-      <label for="userpassword">Password</label>
-    </div>
-
-    <br>
-    <button class="btn cyan waves-effect waves-light" type="submit" name="button">Log In</button>
-  </form>
-    <br>
-  <form action="/create_user" method="post">
-    <button class="btn amber waves-effect waves-light" type="submit" name="button">Create Account</button>
-  </form>
-</div>
-
-{% if msg is not empty %}
-{{ msg }}
-{% endif %}
-{% include 'bottom.html.twig' %}
+    {% if msg is not empty %}
+    {{ msg }}
+    {% endif %}
+    {% include 'bottom.html.twig' %}
+    
+  </div>

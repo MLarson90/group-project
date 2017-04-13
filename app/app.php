@@ -112,7 +112,7 @@
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
       $groups = $user->getGroup();
-      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request));
+      return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request, 'friends' => $friends));
     } else {
       $user = User::findUserbyId($_POST['user_id']);
       $group_requests = $user->findGroupRequest();
@@ -131,6 +131,7 @@
     $friends = $user->findAllFriends();
     return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id), 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
+
   $app->get("/groupinfo/{group_id}/{user_id}", function ($group_id, $user_id) use ($app) {
     $group = Group::find($group_id);
     $admin_id = $group->groupAdminId();
@@ -144,8 +145,9 @@
         }
       }
     }
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>'', 'tasks'=>$tasks, 'assignedtasks'=>$assigned , 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>$user, 'msg'=>'', 'tasks'=>$tasks, 'assignedtasks'=>$assigned , 'unassignedtasks'=>$tasks, 'user_id' => $user_id, 'groupname'=>$group->getGroupName()));
   });
+
 
   $app->post("/search/{id}", function($id) use($app){
       $user = User::findUserbyId($id);
