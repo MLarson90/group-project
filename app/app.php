@@ -216,7 +216,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Invitation has sent!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       } else {
         $tasks = Task::getAllByGroupId($_POST['group_id']);
         $assigned = Task::getAssignedTask($_POST['group_id']);
@@ -317,7 +317,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'successfully assigned', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       } else {
         $admin_id = $group->groupAdminId();
         $tasks = Task::getAllByGroupId($_POST['group_id']);
@@ -329,7 +329,7 @@ Request::enableHttpMethodParameterOverride();
             }
           }
         }
-        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+        return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'User is not in the group yet!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
       }
     }
   });
@@ -379,7 +379,7 @@ Request::enableHttpMethodParameterOverride();
         }
       }
     }
-    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+    return $app['twig']->render('group.html.twig', array('group_id'=>$group->getId(), 'admin_id'=>$admin_id, 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Delete successfully!', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
   });
 
   return $app;
