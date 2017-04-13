@@ -7,6 +7,8 @@
 
   use Symfony\Component\Debug\Debug;
   Debug::enable();
+  use Symfony\Component\HttpFoundation\Request;
+Request::enableHttpMethodParameterOverride();
 
   $app = new Silex\Application();
   $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
@@ -64,6 +66,10 @@
     $group_requests = $user->findGroupRequest();
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($id), 'user'=>$user, 'groups'=>$groups,'user_id'=>$user_id, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -77,6 +83,10 @@
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'groups'=>$groups,'user_id'=>$_POST['user_id'], 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
@@ -96,6 +106,10 @@
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
     }
   });
@@ -111,6 +125,10 @@
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request, 'friends' => $friends));
     } else {
@@ -118,6 +136,10 @@
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
     }
@@ -129,6 +151,10 @@
     $group_requests = $user->findGroupRequest();
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id), 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -201,6 +227,10 @@
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
     $groups = $user->getGroup();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -211,6 +241,10 @@
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
     $groups = $user->getGroup();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -231,6 +265,18 @@
       }
       return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
     }
+  });
+  $app->patch("/edit_homepage/{id}", function($id) use($app){
+    $user = User::findUserbyId($id);
+    $profile = Profile::getProfileUsingId($id);
+    $profile_pic = $profile->getPicture();
+    $new_profile = $profile->updateProfile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
+    $profile = Profile::getProfileUsingId($id);
+    $groups = $user->getGroup();
+    $group_requests = $user->findGroupRequest();
+    $user_request = $user->findFriendRequest();
+    $friends = $user->findAllFriends();
+    return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user_id'=>$id, 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request, 'friends'=>$friends, 'user'=>$user));
   });
 
   $app->get("/task/{task_id}", function ($task_id) use ($app) {
@@ -293,6 +339,10 @@
     $user_request = $user->findFriendRequest();
     $groups = $user->getGroup();
     $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['receiver_id']), 'user'=>$user, 'user_id'=>$_POST['receiver_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 

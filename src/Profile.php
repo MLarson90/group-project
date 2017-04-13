@@ -109,7 +109,7 @@
           }
           return $returned_profiles;
       }
-      function updateFirstName($new_first_name, $new_last_name, $new_pic, $new_bio)
+      function updateProfile($new_first_name, $new_last_name, $new_pic, $new_bio)
       {
           $executed = $GLOBALS['DB']->prepare("UPDATE profiles SET first_name = :first_name, last_name = :last_name, picture = :picture, bio = :bio WHERE id = {$this->getId()};");
           $executed->bindParam(':first_name', $new_first_name, PDO::PARAM_STR);
@@ -119,7 +119,6 @@
           $executed->execute();
           if ($executed)
           {
-            $this->setFirstName($new_first_name);
             return true;
           } else {
             return false;
