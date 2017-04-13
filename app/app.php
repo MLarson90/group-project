@@ -276,7 +276,7 @@ Request::enableHttpMethodParameterOverride();
           }
         }
       }
-      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName()));
+      return $app['twig']->render('group.html.twig', array('group_id'=>$_POST['group_id'], 'admin_id'=>$_POST['admin_id'], 'user'=>User::findUserbyId($_POST['user_id']), 'msg'=>'Task created successfully', 'tasks'=>$tasks, 'assignedtasks'=>$assigned, 'unassignedtasks'=>$tasks, 'groupname'=>$group->getGroupName(), 'user_id'=>$_POST['user_id']));
     }
   });
   $app->patch("/edit_homepage/{id}", function($id) use($app){
