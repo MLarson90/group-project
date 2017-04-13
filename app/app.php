@@ -293,10 +293,12 @@ Request::enableHttpMethodParameterOverride();
     return $app['twig']->render('homepage.html.twig', array('profile'=>$profile, 'user_id'=>$id, 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request, 'friends'=>$friends, 'user'=>$user));
   });
 
-  $app->get("/task/{task_id}", function ($task_id) use ($app) {
+  $app->post("/task/{task_id}", function ($task_id) use ($app) {
     $task = Task::findTask($task_id);
     $assigned_user = $task->assignedUser();
-    return $app['twig']->render("task.html.twig", array('task'=>$task, 'assigned_user'=>$assigned_user));
+    $user_id = $_POST['user_id'];
+    $user = User::findUserbyId($user_id);
+    return $app['twig']->render("task.html.twig", array('task'=>$task, 'assigned_user'=>$assigned_user,'user'=>$user, 'user_id'=>$user_id));
   });
 
   $app->post("/assignuser", function () use ($app) {
