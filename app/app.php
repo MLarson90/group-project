@@ -36,7 +36,7 @@ Request::enableHttpMethodParameterOverride();
     {
       $new_user = new User($_POST['user_email'], $_POST['password']);
       $new_user->save();
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
+      return $app['twig']->render('create_profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
       return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
@@ -366,6 +366,20 @@ Request::enableHttpMethodParameterOverride();
       array_push($friends, $afriend);
     }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['receiver_id']), 'user'=>$user, 'user_id'=>$_POST['receiver_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
+  });
+  $app->post("/friendrefuse", function () use ($app) {
+    $user = User::findUserbyId($_POST['receive_id']);
+    $user->deleteFriendRequest($_POST['send_id'], $_POST['receive_id']);
+    var_dump($_POST['receive_id']);
+    $group_requests = $user->findGroupRequest();
+    $user_request = $user->findFriendRequest();
+    $groups = $user->getGroup();
+    $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['receive_id']), 'user'=>$user, 'user_id'=>$_POST['receive_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
   $app->post("/deletetask", function () use ($app) {

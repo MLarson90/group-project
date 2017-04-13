@@ -77,8 +77,8 @@
         <button type="submit">Accept</button>
       </form>
       <form action="/friendrefuse" method="post">
-        <input type="hidden" name="receiver_id" value="{{ user_requests.id }}">
-        <input type="hidden" name="sender_id" value="{{ user_requests.id }}">
+        <input type="hidden" name="receive_id" value="{{ user_id }}">
+        <input type="hidden" name="send_id" value="{{ user.id }}">
         <button type="submit">Refuse</button>
       </form>
     {% endfor %}
