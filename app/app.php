@@ -36,7 +36,7 @@ Request::enableHttpMethodParameterOverride();
     {
       $new_user = new User($_POST['user_email'], $_POST['password']);
       $new_user->save();
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
+      return $app['twig']->render('create_profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
       return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
