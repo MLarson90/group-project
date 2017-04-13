@@ -66,6 +66,10 @@ Request::enableHttpMethodParameterOverride();
     $group_requests = $user->findGroupRequest();
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($id), 'user'=>$user, 'groups'=>$groups,'user_id'=>$user_id, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -79,6 +83,10 @@ Request::enableHttpMethodParameterOverride();
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>$user, 'groups'=>$groups,'user_id'=>$_POST['user_id'], 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
     } else {
         return $app['twig']->render('profile.html.twig', array('user_id'=>$_POST['user_id'], 'msg'=>''));
@@ -98,6 +106,10 @@ Request::enableHttpMethodParameterOverride();
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       return $app['twig']->render('homepage.html.twig', array('profile'=>$profile,'user'=>$user,'user_id'=>$user_id, 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
     }
   });
@@ -113,6 +125,10 @@ Request::enableHttpMethodParameterOverride();
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests, 'user_request'=>$user_request));
     } else {
@@ -120,6 +136,10 @@ Request::enableHttpMethodParameterOverride();
       $group_requests = $user->findGroupRequest();
       $user_request = $user->findFriendRequest();
       $friends = $user->findAllFriends();
+      $friend = $user->findAllOtherFriends();
+      foreach($friend as $afriend){
+        array_push($friends, $afriend);
+      }
       $groups = $user->getGroup();
       return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
     }
@@ -131,6 +151,10 @@ Request::enableHttpMethodParameterOverride();
     $group_requests = $user->findGroupRequest();
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('groups'=>$groups, 'user_id'=>$id, 'user'=>$user, 'profile'=>Profile::getProfileUsingId($id), 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
   $app->get("/groupinfo/{group_id}/{user_id}", function ($group_id, $user_id) use ($app) {
@@ -201,6 +225,10 @@ Request::enableHttpMethodParameterOverride();
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
     $groups = $user->getGroup();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -211,6 +239,10 @@ Request::enableHttpMethodParameterOverride();
     $user_request = $user->findFriendRequest();
     $friends = $user->findAllFriends();
     $groups = $user->getGroup();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['user_id']), 'user'=>User::findUserbyId($_POST['user_id']), 'user_id'=>$_POST['user_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 
@@ -302,6 +334,10 @@ Request::enableHttpMethodParameterOverride();
     $user_request = $user->findFriendRequest();
     $groups = $user->getGroup();
     $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['receiver_id']), 'user'=>$user, 'user_id'=>$_POST['receiver_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
 

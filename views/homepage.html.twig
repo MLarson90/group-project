@@ -88,7 +88,7 @@
   {% if friends is not empty %}
 <h3> My associates </h3>
 {% for friend in friends %}
-<p> {{ friend.getFirstName}} {{ friend.getLastName }} <img src="{{ friend.getPicture }}" height="35" width="35"></p>
+<p> {{ friend.getFirstName }} {{ friend.getLastName }} <img src="{{ friend.getPicture }}" height="35" width="35"></p>
 {% endfor %}
   {% else %}
   <h4> You do not have any associates yet </h4>
