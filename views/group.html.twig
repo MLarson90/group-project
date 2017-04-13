@@ -2,7 +2,7 @@
 
 <div class = "container">
   <div class = "row">
-    <div class = "col m6 myprofile">
+    <div class = "col m12 myprofile">
       <h3>{{ groupname }}</h3>
     </div>
   </div>
@@ -89,7 +89,11 @@
         <div class = "col m12 section">
           <h4>Unassigned Tasks</h4>
           {% for unassignedtask in unassignedtasks %}
-          <li><a href="/task/{{ unassignedtask.getId }}">{{ unassignedtask.getName }}</a></li>
+
+          <form  name="user_id" method="post" action="/task/{{ unassignedtask.getId }}">
+            <input type="hidden" name="user_id" value="{{ user.getId }}">
+            <div class="butlink"> Task: <button class="simple" type="submit" name="assign">{{ unassignedtask.getName }}</button></div>
+          </form>
         {% endfor %}
       {% endif %}
     {% endif %}
