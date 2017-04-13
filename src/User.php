@@ -168,6 +168,15 @@
         }
       return $all_groups;
     }
+    function getTasksinGroup(){
+      $returned_tasks = $GLOBALS['DB']->query("SELECT tasks.* FROM tasks JOIN users_tasks ON (tasks.id = users_tasks.task_id) JOIN users ON (users_tasks.user_id = users.id) WHERE users.id = {$this->getId()};");
+      $all_tasks = array();
+        foreach($returned_tasks as $task){
+          $each_task = new Task($task['task_name'], $task['task_description'], $task['assign_time'], $task['due_time'], $task['id']);
+          array_push($all_tasks, $each_task);
+        }
+      return $all_tasks;
+    }
 
       function joinUserProfile($profile_id)
       {

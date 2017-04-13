@@ -50,7 +50,7 @@
 
         <ul class="collapsible" data-collapsible="accordion">
           {% for group in groups %}
-            {% set tasks = group.getTaskFromGroup %}
+            {% set tasks = user.getTasksinGroup %}
           <li>
             <div class="collapsible-header"><span class="new badge cyan " data-badge-caption="tasks">
             {{tasks|length}}</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
