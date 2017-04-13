@@ -381,6 +381,20 @@
     }
     return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['receiver_id']), 'user'=>$user, 'user_id'=>$_POST['receiver_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
   });
+  $app->post("/friendrefuse", function () use ($app) {
+    $user = User::findUserbyId($_POST['receive_id']);
+    $user->deleteFriendRequest($_POST['send_id'], $_POST['receive_id']);
+    var_dump($_POST['receive_id']);
+    $group_requests = $user->findGroupRequest();
+    $user_request = $user->findFriendRequest();
+    $groups = $user->getGroup();
+    $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($_POST['receive_id']), 'user'=>$user, 'user_id'=>$_POST['receive_id'], 'groups'=>$groups, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
+  });
 
   $app->post("/deletetask", function () use ($app) {
     $group = Group::find($_POST['group_id']);
