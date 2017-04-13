@@ -302,6 +302,28 @@
       return true;
     }
   }
+  function findAllFriendsId()
+  {
+    $executed = $GLOBALS['DB']->query("SELECT friends.friend_two, users.username, profiles.* FROM friends JOIN users ON(users.id = friends.friend_two) JOIN users_profiles ON (users_profiles.user_id = friends.friend_two) JOIN profiles ON (users_profiles.profile_id = profiles.id) WHERE friends.friend_one = {$this->getId()};");
+    $friends = array();
+    $returned_friends = $executed->fetchAll(PDO::FETCH_ASSOC);
+    foreach($returned_friends as $profile){
+      $newProfile = $profile['id'];
+      array_push($friends, $newProfile);
+    }
+    return $friends;
+  }
+  function findAllOtherFriendsId()
+  {
+    $executed = $GLOBALS['DB']->query("SELECT friends.friend_one, users.username, profiles.* FROM friends JOIN users ON(users.id = friends.friend_one) JOIN users_profiles ON (users_profiles.user_id = friends.friend_one) JOIN profiles ON (users_profiles.profile_id = profiles.id) WHERE friends.friend_two = {$this->getId()};");
+    $friends = array();
+    $returned_friends = $executed->fetchAll(PDO::FETCH_ASSOC);
+    foreach($returned_friends as $profile){
+      $newProfile = $profile['id'];
+      array_push($friends, $newProfile);
+    }
+    return $friends;
+  }
   }
 
 
