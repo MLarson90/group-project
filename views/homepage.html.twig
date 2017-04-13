@@ -28,6 +28,26 @@
   <div class = "row">
     <div class = "col m6">
       <h5 class = "homepage">My Groups</h5>
+      {% if group_requests is not empty %}
+        {% for group_request in group_requests %}
+          <form action="/groupaccept" method="post">
+            <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
+            <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
+            <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
+            <p>You are invited to group: {{ group_request.group_name }}</p>
+            <button class="btn cyan waves-effect waves-light" type="submit">Accept</button>
+          </form>
+          <br>
+          <form action="/grouprefuse" method="post">
+            <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
+            <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
+            <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
+            <button class="btn amber waves-effect waves-light" type="submit">Refuse</button>
+          </form>
+          <br>
+        {% endfor %}
+      {% endif %}
+
         <ul class="collapsible" data-collapsible="accordion">
           {% for group in groups %}
             {% set tasks = group.getTaskFromGroup %}
@@ -44,55 +64,37 @@
         </ul>
     </div>
     <div class = "col m6">
-      <h5 class = "homepage">My Tasks</h5>
-      Place tasks here
+        <h5> My Associates </h5>
+      {% if user_request is not empty %}
+      {% for user_requests in user_request %}
+      {% set user = user_requests.findUserbyProfileIdNotStatic(user_requests.getId)%}
+        <form action="/friendaccept" method="post">
+          <input type="hidden" name="receiver_id" value="{{ user_id }}">
+          <input type="hidden" name="sender_id" value="{{ user.id }}">
+          <p><img src="{{ user_requests.getPicture }}" height="35" width="35"> {{ user_requests.getFirstName }} {{ user_requests.getLastName }} would like to add you as an associate</p>
+          <button class="btn cyan waves-effect waves-light" type="submit">Accept</button>
+        </form>
+        <br>
+        <form action="/friendrefuse" method="post">
+          <input type="hidden" name="receive_id" value="{{ user_id }}">
+          <input type="hidden" name="send_id" value="{{ user.id }}">
+          <button class="btn amber waves-effect waves-light" type="submit">Refuse</button>
+        </form>
+      {% endfor %}
+      {% endif %}
+
+      {% if friends is not empty %}
+      {% for friend in friends %}
+      <p><img class= "circle" src="{{ friend.getPicture }}" height="35" width="35"><a href="/viewprofile/{{friend.getLastName}}/{{friend.getId}}/{{user_id}}"> {{ friend.getFirstName }} {{ friend.getLastName }} </a></p>
+      {% endfor %}
+      {% else %}
+      <h5> No Associates Yet... </h5>
+      {% endif %}
     </div>
   </div>
   <div class = "row">
-    {% if group_requests is not empty %}
-      {% for group_request in group_requests %}
-        <form action="/groupaccept" method="post">
-          <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
-          <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
-          <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
-          <p>You are invited to group: {{ group_request.group_name }}</p>
-          <button type="submit">Accept</button>
-        </form>
-        <form action="/grouprefuse" method="post">
-          <input type="hidden" name="group_id" value="{{ group_request.group_id }}">
-          <input type="hidden" name="sender_id" value="{{ group_request.sender_id }}">
-          <input type="hidden" name="user_id" value="{{ group_request.user_id }}">
-          <button type="submit">Refuse</button>
-        </form>
-      {% endfor %}
-    {% endif %}
+
     </div>
-    {% if user_request is not empty %}
-    {% for user_requests in user_request %}
-    {% set user = user_requests.findUserbyProfileIdNotStatic(user_requests.getId)%}
-      <form action="/friendaccept" method="post">
-        <input type="hidden" name="receiver_id" value="{{ user_id }}">
-        <input type="hidden" name="sender_id" value="{{ user.id }}">
-        <p><img src="{{ user_requests.getPicture }}" height="35" width="35"> {{ user_requests.getFirstName }} {{ user_requests.getLastName }} would like to add you as an associate</p>
-        <button type="submit">Accept</button>
-      </form>
-      <form action="/friendrefuse" method="post">
-        <input type="hidden" name="receive_id" value="{{ user_id }}">
-        <input type="hidden" name="send_id" value="{{ user.id }}">
-        <button type="submit">Refuse</button>
-      </form>
-    {% endfor %}
-    {% endif %}
-
-
-  {% if friends is not empty %}
-<h5> My Associates </h5>
-{% for friend in friends %}
-<p> {{ friend.getFirstName }} {{ friend.getLastName }} <img src="{{ friend.getPicture }}" height="35" width="35"></p>
-{% endfor %}
-  {% else %}
-  <h5> No Associates Yet... </h5>
-  {% endif %}
 
 </div>
 
