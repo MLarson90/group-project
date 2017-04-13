@@ -8,7 +8,7 @@
   use Symfony\Component\Debug\Debug;
   Debug::enable();
   use Symfony\Component\HttpFoundation\Request;
-Request::enableHttpMethodParameterOverride();
+  Request::enableHttpMethodParameterOverride();
 
   $app = new Silex\Application();
   $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
@@ -36,7 +36,7 @@ Request::enableHttpMethodParameterOverride();
     {
       $new_user = new User($_POST['user_email'], $_POST['password']);
       $new_user->save();
-      return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
+      return $app['twig']->render('create_profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
     } elseif (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 1)) {
       return $app['twig']->render('create_account.html.twig', array('msg'=>'That email is in use.'));
       return $app['twig']->render('profile.html.twig', array('user_id'=>$new_user->getId(), 'msg'=>''));
@@ -60,6 +60,22 @@ Request::enableHttpMethodParameterOverride();
     return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->get("/homepage/{id}", function($id) use($app){
+    $user = User::findUserbyId($id);
+    $user_id = $user->getId();
+    $groups = $user->getGroup();
+    $group_requests = $user->findGroupRequest();
+    $user_request = $user->findFriendRequest();
+    $friends = $user->findAllFriends();
+    $friend = $user->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
+    return $app['twig']->render('homepage.html.twig', array('profile'=>Profile::getProfileUsingId($id), 'user'=>$user, 'groups'=>$groups,'user_id'=>$user_id, 'group_requests'=>$group_requests,'user_request'=>$user_request,"friends" => $friends));
+  });
+  $app->post("/homepage/{id}", function($id) use($app){
+    $new_profile = new Profile($_POST['first_name'], $_POST['last_name'], $_POST['profile_pic'], $_POST['bio']);
+    $new_profile->save($new_profile->getFirstName(), $new_profile->getLastName(), $new_profile->getBio(), $new_profile->getPicture());
+    $new_profile->saveUsertoJoinTable($_POST['user_id']);
     $user = User::findUserbyId($id);
     $user_id = $user->getId();
     $groups = $user->getGroup();
