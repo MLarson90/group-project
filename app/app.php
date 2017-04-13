@@ -196,7 +196,7 @@ Request::enableHttpMethodParameterOverride();
       if($_POST['searchName'] != null){
         return $app['twig']->render('search_results.html.twig', array('profiles'=>$results, 'msg'=>'', 'user_id'=>$user_id));
       } else {
-        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'user_id'=>$user_id, 'msg'=>'No Match!'));
+        return $app['twig']->render('search_results.html.twig', array('profiles'=>'', 'user_id'=>$id, 'msg'=>'No Match!', 'user'=>$user));
       }
   });
 

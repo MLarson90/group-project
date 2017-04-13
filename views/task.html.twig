@@ -6,14 +6,14 @@
     <div class = "col m12 section">
       <h4>Task {{ task.getName }} assigned to {{ assigned_user }}</h4>
       <p>Description: {{ task.getDescription }}</p>
-      <p>Assign Time: {{ task.getAssignTime }}</p>
+      <p>Date Made: {{ task.getAssignTime }}</p>
       <p>Due Time: {{ task.getDueTime }}</p>
     </div>
     {% else %}
     <div class = "col m12 section">
       <h4>Task: {{ task.getName }}</h4>
       <p>Description: {{ task.getDescription }}</p>
-      <p>Assign Time: {{ task.getAssignTime }}</p>
+      <p>Date Made: {{ task.getAssignTime }}</p>
       <p>Due Time: {{ task.getDueTime }}</p>
       {% endif %}
     </div>

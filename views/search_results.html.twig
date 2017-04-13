@@ -1,26 +1,33 @@
 {% include 'top.html.twig' %}
-<nav>
-  <div class="nav-wrapper">
-    <div class="container">
-      <a href="/" class="brand-logo center">everydone</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="#">My Groups</a></li>
-        <li><a href="#">My Tasks</a></li>
-        <li><a href="/homepage/{{ user_id }}">My Profile</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+
 {% if profiles is not empty %}
 {% for profile in profiles %}
-<img src="{{ profile.getPicture }}" height="100" width="100">
-<ul>
-  <li><a href="/viewprofile/{{ profile.getFirstName }}/{{ profile.getId }}/{{ user_id }}">{{ profile.getFirstName }} {{ profile.getLastName }}</a></li>
-</ul>
-{% endfor %}
-{% endif %}
+<div class = "container">
+  <div class = "row">
+    <div class = "col m12">
+      <div class = "myprofile">
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="{{ profile.getPicture }}" height="100" width="100">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <ul>
+                <li><a href="/viewprofile/{{ profile.getFirstName }}/{{ profile.getId }}/{{ user_id }}">{{ profile.getFirstName }} {{ profile.getLastName }}</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+              {% endfor %}
+              {% endif %}
 
-{% if msg is not empty %}
-{{ msg }}
-{% endif %}
+              {% if msg is not empty %}
+                {{ msg }}
+              {% endif %}
+
+{% include 'sidenav.html.twig' %}
 {% include 'bottom.html.twig' %}
