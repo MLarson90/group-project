@@ -11,7 +11,7 @@
 Request::enableHttpMethodParameterOverride();
 
   $app = new Silex\Application();
-  $DB = new PDO('mysql:host=localhost;dbname=appdata', 'root', 'root');
+  $DB = new PDO('mysql:host=localhost:8889;dbname=appdata', 'root', 'root');
   $app['debug'] = true;
 
   $app->register(new Silex\Provider\TwigServiceProvider(), array(

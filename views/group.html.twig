@@ -93,20 +93,27 @@
         {% endfor %}
       {% endif %}
     {% endif %}
-  </div>
-</div>
+        </div>
+      </div>
+<div class="container">
+<div class="container">
+    {% if assignedtasks is not empty %}
+      <div class = "row">
+        <div class = "col m12 section">
+          <h4>Assigned Task</h4>
+          {% for assignedtask in assignedtasks %}
 
-
-  {% if assignedtasks is not empty %}
-    <div class = "row">
-      <div class = "col m12 section">
-      <h4>Assigned Task</h4>
-      {% for assignedtask in assignedtasks %}
-        <li><a href="/task/{{ assignedtask.getId }}">{{ assignedtask.getName }}</a></li>
-      {% endfor %}
+          <form  name="user_id" method="post" action="/task/{{assignedtask.getId}}">
+            <input type="hidden" name="user_id" value="{{ user.getId }}">
+            <div class="butlink"> Task: <button class="simple" type="submit" name="assign">{{ assignedtask.getName }}</button></div>
+          </form>
+          {% endfor %}
     {% endif %}
+    </div>
   </div>
 </div>
+</div>
+
 </div>
 
 {% include 'sidenav.html.twig' %}
