@@ -1,8 +1,6 @@
 
 <ul id="nav-mobile" class="side-nav fixed">
-  <div class = "logo-area">
-    <img src = "images/everydone_logo_tiny.png" width="200px">
-  </div>
+  <li class="logo"><a id="logo-container" href="/homepage/{{ user_id }}" class="brand-logo center" style="color:#00bcd4" >everydone</a></li>
    <li class="no-padding">
      <ul class="collapsible collapsible-accordion">
        <li class="bold"><a href="/homepage/{{ user_id }}" class="collapsible-header  waves-effect waves-cyan">Home</a>
@@ -11,20 +9,6 @@
          <div class="collapsible-body">
            <ul>
              <li>{% include 'creategroup.html.twig' %}</li>
-           </ul>
-         </div>
-       </li>
-       <li class="bold"><a class="collapsible-header  waves-effect waves-cyan">Create Tasks</a>
-         <div class="collapsible-body">
-           <ul>
-             <li><a href="#">Tasks go here</a></li>
-           </ul>
-         </div>
-       </li>
-       <li class="bold"><a class="collapsible-header  waves-effect waves-cyan">Friends</a>
-         <div class="collapsible-body">
-           <ul>
-             <li><a href="#">Friends go here</a></li>
            </ul>
          </div>
        </li>
