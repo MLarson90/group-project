@@ -31,7 +31,7 @@ Request::enableHttpMethodParameterOverride();
   $app->post("/create_user", function() use ($app) {
     return $app['twig']->render('create_account.html.twig', array('msg'=>''));
   });
-  
+
   $app->post("/create_account", function() use ($app) {
     $username = User::usernameArray();
     if (($_POST['password'] == $_POST['password1']) && (in_array($_POST['user_email'], $username) == 0))
@@ -52,6 +52,13 @@ Request::enableHttpMethodParameterOverride();
     $user = Profile::findUserbyProfileId($profile_id);
     $user_id = $user->getId();
     $groups = $user->getGroup();
+    $me = User::findUserbyId($id);
+    $friends = $me->findAllFriends();
+    $friend = $me->findAllOtherFriends();
+    foreach($friend as $afriend){
+      array_push($friends, $afriend);
+    }
+    var_dump($friends);
     return $app['twig']->render('viewprofile.html.twig', array('profile'=>$profile,  'profile_id'=>$profile_id, 'user_id'=>$user_id, 'groups' => $groups, 'id'=>$id));
   });
   $app->post("/viewprofile/{first_name}/{profile_id}/{id}", function($first_name, $profile_id, $id) use ($app) {
