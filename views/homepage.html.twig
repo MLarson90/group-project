@@ -56,7 +56,10 @@
             {{tasks|length}}</span><i class="material-icons"></i><a href="/groupinfo/{{ group.getId }}/{{ user_id }}">{{ group.getGroupName }}</a></div>
             <div class="collapsible-body">
               {% for task in tasks %}
-              <p>{{task.getName}}- Due: {{task.getDueTime}}</p></br>
+              <form  name="user_id" method="post" action="/task/{{task.getId}}">
+                <input type="hidden" name="user_id" value="{{ user.getId }}">
+                <div class="butlink"> Task: <button class="simple" type="submit" name="assign">{{ task.getName }}</button>Due: {{ task.getDueTime }}</div>
+              </form>
               {% endfor %}
             </div>
           </li>
@@ -64,7 +67,7 @@
         </ul>
     </div>
     <div class = "col m6">
-        <h5> My Associates </h5>
+
       {% if user_request is not empty %}
       {% for user_requests in user_request %}
       {% set user = user_requests.findUserbyProfileIdNotStatic(user_requests.getId)%}
@@ -84,6 +87,7 @@
       {% endif %}
 
       {% if friends is not empty %}
+      <h5> My Associates </h5>
       {% for friend in friends %}
       <p><img class= "circle" src="{{ friend.getPicture }}" height="35" width="35"><a href="/viewprofile/{{friend.getLastName}}/{{friend.getId}}/{{user_id}}"> {{ friend.getFirstName }} {{ friend.getLastName }} </a></p>
       {% endfor %}
